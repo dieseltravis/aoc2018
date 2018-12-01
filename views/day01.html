@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>one</title>
+    <meta name="description" content="one">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>
+        one
+      </h1>
+      <p>
+        <a href="https://adventofcode.com/2018/day/1">https://adventofcode.com/2018/day/1</a>
+      </p>
+    </header>
+
+    <main>
+      <h2>
+        part 1
+      </h2>
+      <textarea id="input1" placeholder="input"></textarea>
+      <code id="part1"></code>
+      <hr />
+      <h2>
+        part 2
+      </h2>
+      <textarea id="input2" placeholder="input"></textarea>   
+      <code id="part2"></code>
+    </main>
+
+    <footer>
+      Made with <a href="https://glitch.com">Glitch</a>!
+    </footer>
+
+    <script>
+      const input1 = document.getElementById("input1");
+      input1.addEventListener("change", ev => {
+        document.getElementById('part1').innerText = eval(input1.value);
+      });
+      
+      const input2 = document.getElementById("input2");
+      input2.addEventListener("change", ev => {
+        var i = 0, 
+            current = 0, 
+            freqs = {}, 
+            data2 = input2.value.trim().split('\n').map(v => parseInt(v, 10));
+        
+        while(!freqs['x'+current]) {
+          freqs['x'+current] = 1;
+          current += data2[i];
+          i += 1;
+          i = i % data2.length;
+        }
+        
+        document.getElementById('part2').innerText = current;
+      });
+      
+    </script>
+    
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+
+  </body>
+</html>
