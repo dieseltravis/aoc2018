@@ -1,9 +1,6 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
   "name": "waiting-caribou",
-  "version": "0.1",
+  "version": "0.1.2",
   "description": "Travis's Advent of Code 2018",
   "main": "server.js",
   "scripts": {
@@ -20,8 +17,8 @@
   },
   "license": "MIT",
   "keywords": [
-    "node",
-    "glitch",
-    "express"
+    "javascript",
+    "aoc",
+    "2018"
   ]
 }
