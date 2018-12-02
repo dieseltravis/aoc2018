@@ -28,33 +28,15 @@ for (let i = 1; i <= 31; i++) {
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
-// day 1: client side
-app.post("/day01part2", function (request, response) {
-  const input = request.body.input;
-  var i = 0, 
-      current = 0, 
-      freqs = {}, 
-      data2 = input.trim().split('\n').map(v => parseInt(v, 10));
-
-  while(!freqs['x'+current]) {
-    freqs['x'+current] = 1;
-    current += data2[i];
-    i += 1;
-    i = i % data2.length;
-  }
-  response.status(200).send({ output: current });
+// for server js: 
+app.post("/day00part1", function (request, response) {
+  const input1 = request.body.input;
+  
+  response.status(200).send({ output: input1 });
 });
 
-// day 2: 
-app.post("/day02part1", function (request, response) {
-  const input = request.body.input;
-  
-  
-  response.status(200).send({ output: input });
-});
-
-app.post("/day02part2", function (request, response) {
-  const input = request.body.input;
+app.post("/day00part2", function (request, response) {
+  const input2 = request.body.input;
   
   response.status(200).send({ output: "ok" });
 });

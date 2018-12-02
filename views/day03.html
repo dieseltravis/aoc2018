@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>one</title>
-    <meta name="description" content="one">
+    <title>three</title>
+    <meta name="description" content="three">
     <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,10 +12,10 @@
   <body>
     <header>
       <h1>
-        one
+        three
       </h1>
       <p>
-        <a href="https://adventofcode.com/2018/day/1">https://adventofcode.com/2018/day/1</a>
+        <a href="/adventofcode.com/2018/day/3">adventofcode.com/2018/day/3</a>
       </p>
     </header>
 
@@ -23,45 +23,45 @@
       <h2>
         part 1
       </h2>
-      <textarea id="input1" placeholder="input"></textarea>
-      <code id="part1"></code>
+      <form method="POST" action="/day03part1">
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <code id="part1"></code>
+        <input type="submit" />
+      </form>
       <hr />
       <h2>
         part 2
       </h2>
-      <textarea id="input2" placeholder="input"></textarea>   
-      <code id="part2"></code>
+      <form method="POST" action="/day03part2">
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
+        <code id="part2"></code>
+        <input type="submit" />
+      </form>
     </main>
 
     <footer>
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
-
+    
     <script>
       const input1 = document.getElementById("input1");
+      const part1 = document.getElementById('part1');
       input1.addEventListener("change", ev => {
-        document.getElementById('part1').innerText = eval(input1.value);
+        const data1 = input1.value.trim().split("\n");
+        
+        part1.innerText = "TODO:"
       });
       
       const input2 = document.getElementById("input2");
+      const part2 = document.getElementById('part2');
       input2.addEventListener("change", ev => {
-        var i = 0, 
-            current = 0, 
-            freqs = {}, 
-            data2 = input2.value.trim().split('\n').map(v => parseInt(v, 10));
+        const data2 = input2.value.trim().split("\n");
         
-        while(!freqs['x'+current]) {
-          freqs['x'+current] = 1;
-          current += data2[i];
-          i += 1;
-          i = i % data2.length;
-        }
-        
-        document.getElementById('part2').innerText = current;
+        part2.innerText = "TODO:";
       });
       
     </script>
-    
+
     <!-- include the Glitch button to show what the webpage is about and
           to make it easier for folks to view source and remix -->
     <div class="glitchButton"></div>
