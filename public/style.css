@@ -27,9 +27,8 @@ form {
   margin-bottom: 25px;
   padding: 15px;
   background-color: cyan;
-  display: inline-block;
+  display: block;
   width: 100%;
-  max-width: 340px;
   border-radius: 3px;
 }
 
@@ -38,9 +37,23 @@ input {
   margin-bottom: 10px;
   padding: 5px;
   width: 100%;
+  max-width: 340px;
   border: 1px solid lightgrey;
   border-radius: 3px;
   font-size: 16px;
+}
+
+input[type="submit"] {
+  margin: auto;
+}
+
+textarea {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
 }
 
 button {
@@ -68,4 +81,13 @@ footer {
   margin-top: 50px;
   padding-top: 25px;
   border-top: 1px solid lightgrey;
+}
+
+
+
+
+div.glitchButton {
+  position: fixed;
+  top: 20px;
+  right: 20px;
 }

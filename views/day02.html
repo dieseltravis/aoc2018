@@ -24,18 +24,16 @@
         part 1
       </h2>
       <form method="POST" action="/day02part1">
-        <textarea id="input1" name="input" placeholder="input"></textarea>
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <code id="part1"></code>
-        <input type="submit" value="post" />
       </form>
       <hr />
       <h2>
         part 2
       </h2>
       <form method="POST" action="/day02part2">
-        <textarea id="input2" name="input" placeholder="input"></textarea>   
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
         <code id="part2"></code>
-        <input type="submit" value="post" />
       </form>
     </main>
 
@@ -47,20 +45,99 @@
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
       input1.addEventListener("change", ev => {
-        part1.innerText = "TODO:";
+        const data1 = input1.value.trim().split("\n");
+        let two = 0;
+        let three = 0;
+        
+        /*
+abcdef
+bababc
+abbcde
+abcccd
+aabcdd
+abcdee
+ababab
+        */
+        
+        //console.log(data1);
+        data1.forEach(d => {
+          let charCounts = d.split("").reduce(function (counts, char) {
+            //console.info(counts, char);
+            counts[char] = (counts[char]) ? counts[char] + 1 : 1;
+            return counts;
+          }, {});
+          
+          for(let k in charCounts) {
+            if (charCounts[k] === 2) {
+              two++;
+              break;
+            } 
+          }
+          for(let k in charCounts) {
+            if (charCounts[k] === 3) {
+              three++;
+              break;
+            } 
+          }
+          
+          //console.info(d, d.split(), charCounts, two, three);
+        });
+        
+        part1.innerText = two * three;
       });
       
       const input2 = document.getElementById("input2");
-      constpart2 = document.getElementById('part2');
+      const part2 = document.getElementById('part2');
       input2.addEventListener("change", ev => {
-        part2.innerText = "TODO:";
+        const data2 = input2.value.trim().split("\n");
+        /*
+abcde
+fghij
+klmno
+pqrst
+fguij
+axcye
+wvxyz
+        */
+        var answer = "";
+        for (let x = 0, l = data2.length; x < l; x++) {
+          for (let y = 0; y < l; y++) {
+            if (x !== y) {
+              let a = data2[x].split(""),
+                  b = data2[y].split(""),
+                  diff = 0;
+              
+              for (let z = 0, ll = a.length; z < ll; z++) {
+                if (a[z] !== b[z]) {
+                  diff++;
+                }
+              }
+              
+              if (diff <= 1) {
+                //console.info(diff, x, y, a.join(""), b.join(""));
+                let index = 0;
+                answer = a.reduce((s, c) => {
+                  if (c === b[index]) {
+                    s += c;
+                  }
+                  index++;
+                  return s;
+                }, "");
+                break;
+                break;
+              }
+            }
+          }
+        }
+        
+        part2.innerText = answer;
       });
       
     </script>
 
     <!-- include the Glitch button to show what the webpage is about and
           to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <div class="glitchButton"></div>
     <script src="https://button.glitch.me/button.js"></script>
 
   </body>
