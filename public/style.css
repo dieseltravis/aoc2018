@@ -27,9 +27,8 @@ form {
   margin-bottom: 25px;
   padding: 15px;
   background-color: cyan;
-  display: inline-block;
+  display: block;
   width: 100%;
-  max-width: 340px;
   border-radius: 3px;
 }
 
@@ -38,9 +37,19 @@ input {
   margin-bottom: 10px;
   padding: 5px;
   width: 100%;
+  max-width: 340px;
   border: 1px solid lightgrey;
   border-radius: 3px;
   font-size: 16px;
+}
+
+textarea {
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
 }
 
 button {

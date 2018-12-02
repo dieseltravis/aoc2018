@@ -29,14 +29,7 @@ app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 
 // day 1: client side
-
-// day 2: 
-app.post("/day02part1", function (request, response) {
-  const input = request.body.input;
-  response.send(input);
-});
-
-app.post("/day02part2", function (request, response) {
+app.post("/day01part2", function (request, response) {
   const input = request.body.input;
   var i = 0, 
       current = 0, 
@@ -50,6 +43,20 @@ app.post("/day02part2", function (request, response) {
     i = i % data2.length;
   }
   response.status(200).send({ output: current });
+});
+
+// day 2: 
+app.post("/day02part1", function (request, response) {
+  const input = request.body.input;
+  
+  
+  response.status(200).send({ output: input });
+});
+
+app.post("/day02part2", function (request, response) {
+  const input = request.body.input;
+  
+  response.status(200).send({ output: "ok" });
 });
 
 // listen for requests :)
