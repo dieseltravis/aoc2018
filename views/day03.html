@@ -46,18 +46,95 @@
     <script>
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
+      const parse = /\#(\d+)\s\@\s(\d+),(\d+):\s(\d+)x(\d+)/;
+      //                1          2     3       4     5
       input1.addEventListener("change", ev => {
-        const data1 = input1.value.trim().split("\n");
+        const data1 = input1.value.trim().split("\n").map(o => {
+          let match = o.match(parse);
+          return {
+            id: parseInt(match[1], 10),
+            x: parseInt(match[2], 10),
+            y: parseInt(match[3], 10),
+            w: parseInt(match[4], 10),
+            h: parseInt(match[5], 10)
+          };
+        });
         
-        part1.innerText = "TODO:"
+        const plot = data1.reduce((p, o) => {
+          let y = o.y + 1,
+              x = o.x + 1;
+          
+          for (let h = y, hh = y + o.h; h < hh; h++) {
+            for (let w = x, ww = x + o.w; w < ww; w++) {
+              if (!p[h]) {
+                p[h] = [];
+              }
+              if (!p[h][w]) {
+                p[h][w] = 1
+              } else {
+                p[h][w]++;
+              }
+            }
+          }
+
+          return p;
+        }, []);
+        
+        const conflict = plot.reduce((c, a) => {
+          a.forEach((p) => {
+            if (p > 1) {
+              c++;
+            }
+          });
+
+          return c;
+        }, 0);
+        
+        part1.innerText = conflict;
       });
       
       const input2 = document.getElementById("input2");
       const part2 = document.getElementById('part2');
       input2.addEventListener("change", ev => {
-        const data2 = input2.value.trim().split("\n");
+        const data2 = input2.value.trim().split("\n").map(o => {
+          let match = o.match(parse);
+          return {
+            id: parseInt(match[1], 10),
+            x: parseInt(match[2], 10),
+            y: parseInt(match[3], 10),
+            w: parseInt(match[4], 10),
+            h: parseInt(match[5], 10),
+            hasConflict: false
+          };
+        });
         
-        part2.innerText = "TODO:";
+        const plot = data2.reduce((p, o) => {
+          let y = o.y + 1,
+              x = o.x + 1;
+          
+          for (let h = y, hh = y + o.h; h < hh; h++) {
+            for (let w = x, ww = x + o.w; w < ww; w++) {
+              if (!p[h]) {
+                p[h] = [];
+              }
+              if (!p[h][w]) {
+                p[h][w] = o.id
+              } else {
+                data2.filter(oo => {
+                  return (oo.id === p[h][w]);
+                })[0].hasConflict = true;
+                p[h][w] = o.id;
+                o.hasConflict = true;
+              }
+            }
+          }
+
+          return p;
+        }, []);
+        
+        const noConflict = data2.filter(o => { return !o.hasConflict; });
+        
+        part2.innerText = noConflict[0].id;
       });
       
     </script>
