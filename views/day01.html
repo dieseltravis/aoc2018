@@ -40,7 +40,9 @@
     <script>
       const input1 = document.getElementById("input1");
       input1.addEventListener("change", ev => {
+        /* ***************** WARNING: NEVER USE! ******************** */
         document.getElementById('part1').innerText = eval(input1.value);
+        //                                           ^-- this is bad, don't ever do this
       });
       
       const input2 = document.getElementById("input2");
