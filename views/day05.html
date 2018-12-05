@@ -25,7 +25,7 @@
       <form method="POST" action="/day05part1">
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <code id="part1"></code>
-        <input type="submit" />
+        <!-- <input type="submit" /> -->
       </form>
       <hr />
       <h2>
@@ -45,21 +45,37 @@
     <script>
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
+      const rx = /aA|bB|cC|dD|eE|fF|gG|hH|iI|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ|Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|Oo|Pp|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz/;
 
       input1.addEventListener("change", ev => {
-        const data1 = input1.value.trim().split("\n");
-        
-        part1.innerText = "//TODO:";
+        const data1 = input1.value.trim();
+        let output = data1;
+        while (rx.test(output)) output = output.replace(rx, "");
+        part1.innerText = output.length;
       });
       
+      /*
       const input2 = document.getElementById("input2");
       const part2 = document.getElementById('part2');
       
       input2.addEventListener("change", ev => {
-        const data2 = input2.value.trim().split("\n");
+        const data2 = input2.value.trim();
+        let rxs = [];
+        for (let a = 97; a < (97+26); a++) {
+          rxs.push(new RegExp(String.fromCharCode(a), "ig"));
+        }
         
-        part2.innerText = "// TODO:";
+        const length = rxs.reduce((chars, rxl) => {
+          let output = data2;
+          output = output.replace(rxl, "");
+          while (rx.test(output)) output = output.replace(rx, "");
+          chars = Math.min(chars, output.length);
+          return chars;
+        }, data2.length);
+        
+        part2.innerText = length;
       });
+      */
       
     </script>
 
