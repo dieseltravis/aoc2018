@@ -34,7 +34,7 @@
       <form method="POST" action="/day05part2">
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
         <code id="part2"></code>
-        <input type="submit" />
+        <input type="submit" title="look in the server console if this times out" />
       </form>
     </main>
 
@@ -54,28 +54,39 @@
         part1.innerText = output.length;
       });
       
-      /*
       const input2 = document.getElementById("input2");
       const part2 = document.getElementById('part2');
       
       input2.addEventListener("change", ev => {
         const data2 = input2.value.trim();
+        /*
         let rxs = [];
         for (let a = 97; a < (97+26); a++) {
           rxs.push(new RegExp(String.fromCharCode(a), "ig"));
         }
+        */
+        const rxs = [/a/ig,/b/ig,/c/ig,/d/ig,/e/ig,/f/ig,/g/ig,/h/ig,/i/ig,/j/ig,/k/ig,/l/ig,/m/ig,/n/ig,/o/ig,/p/ig,/q/ig,/r/ig,/s/ig,/t/ig,/u/ig,/v/ig,/w/ig,/x/ig,/y/ig,/z/ig];
         
-        const length = rxs.reduce((chars, rxl) => {
-          let output = data2;
-          output = output.replace(rxl, "");
-          while (rx.test(output)) output = output.replace(rx, "");
-          chars = Math.min(chars, output.length);
-          return chars;
-        }, data2.length);
+        part2.innerText = "(this takes a long time!)";
         
-        part2.innerText = length;
+        // todo: use a web worker?
+        //setTimeout(function () {
+          let i = 0;
+          const length = rxs.reduce((chars, rxl) => {
+            let output = data2;
+            output = output.replace(rxl, "");
+            while (rx.test(output)) output = output.replace(rx, "");
+            chars = Math.min(chars, output.length);
+            
+            i++;
+            part2.innerText = Math.round(i / 26 * 100) + "%";
+            
+            return chars;
+          }, data2.length);
+
+          part2.innerText = length;
+        //}, 200);
       });
-      */
       
     </script>
 
