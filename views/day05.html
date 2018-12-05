@@ -68,6 +68,7 @@
         const rxs = [/a/ig,/b/ig,/c/ig,/d/ig,/e/ig,/f/ig,/g/ig,/h/ig,/i/ig,/j/ig,/k/ig,/l/ig,/m/ig,/n/ig,/o/ig,/p/ig,/q/ig,/r/ig,/s/ig,/t/ig,/u/ig,/v/ig,/w/ig,/x/ig,/y/ig,/z/ig];
         
         part2.innerText = "(this takes a long time!)";
+        console.log("starting...");
         
         // todo: use a web worker?
         //setTimeout(function () {
@@ -80,6 +81,7 @@
             
             i++;
             part2.innerText = Math.round(i / 26 * 100) + "%";
+            console.log(Math.round(i / 26 * 100) + "%");
             
             return chars;
           }, data2.length);
