@@ -28,7 +28,7 @@ for (let i = 1; i <= 31; i++) {
 }
 
 app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded()); // to support URL-encoded bodies
+app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 // for when server js is needed: 
 app.post("/day00part1", function (request, response) {
