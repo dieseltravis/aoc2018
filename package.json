@@ -1,6 +1,6 @@
 {
   "name": "waiting-caribou",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Travis's Advent of Code 2018",
   "main": "server.js",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "keywords": [
-    "javascript",
+    "adventofcode",
     "aoc",
     "2018"
   ]
