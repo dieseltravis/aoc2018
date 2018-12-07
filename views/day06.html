@@ -55,6 +55,7 @@
       
       input1.addEventListener("change", ev => {
         const data1 = input1.value.trim().split("\n");
+        
         const coords = data1.map(xy => xy.split(", ").map(Number));
         const maxy = coords.reduce((max, xy) => { return Math.max(max, xy[0]); }, 0);
         const maxx = coords.reduce((max, xy) => { return Math.max(max, xy[1]); }, 0);
@@ -178,66 +179,28 @@
         const coords = data2.map(xy => xy.split(", ").map(Number));
         const maxy = coords.reduce((max, xy) => { return Math.max(max, xy[0]); }, 0);
         const maxx = coords.reduce((max, xy) => { return Math.max(max, xy[1]); }, 0);
-        //console.log(coords);
         
         let grid = [];
         for (let y = 0; y <= maxy; y++) {
           grid[y] = grid[y] || []; 
           for (let x = 0; x <= maxx; x++) {
-            grid[y][x] = { areaIndex: -1, totalDistance: -1 };
-            
-            let minPoints = coords.reduce((points, point, idx) => {
-              //console.info(idx, point);
-              if (points.length === 0) {
-                points.push(idx);
-              } else {
-                let distThis = getDist([y, x], point);
-                let distPrev = getDist([y, x], coords[points[0]]);
-                //console.info(distThis, distPrev, points);
-                if (distThis === distPrev) {
-                  points.push(idx);
-                } else if (distThis < distPrev) {
-                  points = [idx];
-                }
-              }
-              
-              return points;
-            }, []);
-            
-            if (minPoints.length === 1) {
-              grid[y][x].areaIndex = minPoints[0];
-              
-            } else {
-              grid[y][x].areaIndex = null;
-              //grid[y][x].totalDistance = MAX_DIST + 1;
-            }
+            grid[y][x] = 0;
             
             // calculate total distance from all coords
-            grid[y][x].totalDistance = 0;
             coords.every((point) => {
-              //console.info(idx, point);
               let distThis = getDist([y, x], point);
-              grid[y][x].totalDistance += distThis;
+              grid[y][x] += distThis;
               // break if max is exceeded
-              return grid[y][x].totalDistance < MAX_DIST;
+              return grid[y][x] < MAX_DIST;
             });
           }
         }
         
         //console.table(grid);
         
-        /*
-        let closestCounts = {};
-        grid.forEach(y => y.forEach(x => {
-          if (x.areaIndex !== null && x.totalDistance < MAX_DIST) {
-            closestCounts[x] = closestCounts[x] || 0;
-            closestCounts[x]++;
-          }
-        }));
-        */
         const size = grid.reduce((ytotal, y, yi) => {
           ytotal += y.reduce((xtotal, x, xi) => {
-            if (x.totalDistance < MAX_DIST) {
+            if (x < MAX_DIST) {
               xtotal++;
               //console.info(yi, xi, x);
             }

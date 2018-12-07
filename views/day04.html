@@ -89,6 +89,8 @@
               
         });
         
+        //console.table(counter[2851].sleepMinute);
+        
         let maxKey = 0,
             maxMins = 0;
         for (let key in counter) {
@@ -181,7 +183,7 @@
           }
         }
         
-        //console.info(maxKey, maxMin, (maxKey * maxMin));
+        console.info(maxKey, maxMin, (maxKey * maxMin));
         
         part2.innerText = (maxKey * maxMin);
       });
