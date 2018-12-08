@@ -24,6 +24,7 @@
         part 1
       </h2>
       <textarea id="input1" placeholder="input"></textarea>
+      <a href="https://adventofcode.com/2018/day/1/input" target="_blank" class="get-input">get input</a>
       <code id="part1"></code>
         <!-- <input type="submit" /> -->
       <hr />
@@ -31,6 +32,7 @@
         part 2
       </h2>
       <textarea id="input2" placeholder="input"></textarea>   
+      <a href="https://adventofcode.com/2018/day/1/input" target="_blank" class="get-input">get input</a>
       <code id="part2"></code>
         <!-- <input type="submit" /> -->
     </main>
@@ -39,16 +41,18 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
 
+    <script src="/client.js"></script>
     <script>
-      const input1 = document.getElementById("input1");
       input1.addEventListener("change", ev => {
+        console.time("part1");
         /* ***************** WARNING: NEVER USE! ******************** */
-        document.getElementById('part1').innerText = eval(input1.value);
-        //                                           ^-- this is bad, don't ever do this
+        part1.innerText = eval(input1.value);
+        //                ^-- this is bad, don't ever do this
+        console.timeEnd("part1");
       });
       
-      const input2 = document.getElementById("input2");
       input2.addEventListener("change", ev => {
+        console.time("part2");
         var i = 0, 
             current = 0, 
             freqs = {}, 
@@ -61,7 +65,8 @@
           i = i % data2.length;
         }
         
-        document.getElementById('part2').innerText = current;
+        part2.innerText = current;
+        console.timeEnd("part2");
       });
       
     </script>
