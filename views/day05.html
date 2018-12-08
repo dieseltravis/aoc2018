@@ -49,16 +49,19 @@
       const rx = /aA|bB|cC|dD|eE|fF|gG|hH|iI|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ|Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|Oo|Pp|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz/;
 
       input1.addEventListener("change", ev => {
+        console.time("part1");
         const data1 = input1.value.trim();
         let output = data1;
         while (rx.test(output)) output = output.replace(rx, "");
         part1.innerText = output.length;
+        console.timeEnd("part1");
       });
       
       const input2 = document.getElementById("input2");
       const part2 = document.getElementById('part2');
       
       input2.addEventListener("change", ev => {
+        console.time("part2");
         const data2 = input2.value.trim();
         /*
         let rxs = [];
@@ -89,6 +92,7 @@
 
           part2.innerText = length;
         //}, 200);
+        console.timeEnd("part2");
       });
       
     </script>
