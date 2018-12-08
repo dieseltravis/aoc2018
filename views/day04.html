@@ -25,6 +25,7 @@
       </h2>
       <form method="POST" action="/day04part1">
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/4/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
         <!-- <input type="submit" /> -->
       </form>
@@ -33,7 +34,8 @@
         part 2
       </h2>
       <form method="POST" action="/day04part2">
-        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/4/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
         <!-- <input type="submit" /> -->
       </form>
@@ -51,6 +53,7 @@
       //                       1      2       3      4         5        6
       
       input1.addEventListener("change", ev => {
+        console.time("part1");
         const data1 = input1.value.trim().split("\n").sort();
         let counter = {};
         let lastId = 0;
@@ -113,12 +116,14 @@
         //console.info(maxKey, maxMin, (maxKey * maxMin));
         
         part1.innerText = (maxKey * maxMin);
+        console.timeEnd("part1");
       });
       
       const input2 = document.getElementById("input2");
       const part2 = document.getElementById('part2');
       
       input2.addEventListener("change", ev => {
+        console.time("part2");
         const data2 = input2.value.trim().split("\n").sort();
         
         let counter = {};
@@ -183,9 +188,10 @@
           }
         }
         
-        console.info(maxKey, maxMin, (maxKey * maxMin));
+        //console.info(maxKey, maxMin, (maxKey * maxMin));
         
         part2.innerText = (maxKey * maxMin);
+        console.timeEnd("part2");
       });
       
     </script>

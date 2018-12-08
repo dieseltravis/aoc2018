@@ -25,6 +25,7 @@
       </h2>
       <form method="POST" action="/day07part1">
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/7/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
         <!-- <input type="submit" /> -->
       </form>
@@ -33,7 +34,8 @@
         part 2
       </h2>
       <form method="POST" action="/day07part2">
-        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/7/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
         <!-- <input type="submit" /> -->
       </form>
@@ -49,6 +51,7 @@
       const parse = /Step (\w) must be finished before step (\w) can begin/;
       
       input1.addEventListener("change", ev => {
+        console.time("part1");
         const data1 = input1.value.trim().split("\n");
         const steps = data1.map(step => {
           let match = step.match(parse);
@@ -103,15 +106,18 @@
         
         // not GHAIJZTEDRSKQUWYLNBOPX
         part1.innerText = sorted.join("");
+        console.timeEnd("part1");
       });
       
       const input2 = document.getElementById("input2");
       const part2 = document.getElementById('part2');
       
       input2.addEventListener("change", ev => {
+        console.time("part2");
         const data2 = input2.value.trim().split("\n");
 
         part2.innerText = "todo";
+        console.timeEnd("part2");
       });
       
     </script>

@@ -77,6 +77,10 @@ li {
   margin-bottom: 5px;
 }
 
+.get-input {
+  font-size: smaller;
+}
+
 footer {
   margin-top: 50px;
   padding-top: 25px;

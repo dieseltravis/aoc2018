@@ -13,7 +13,8 @@ solutions:
 4. [day four](https://waiting-caribou.glitch.me/day04)
 5. [day five](https://waiting-caribou.glitch.me/day05)
 6. [day six](https://waiting-caribou.glitch.me/day06)
-7. [day seven](https://waiting-caribou.glitch.me/day07)
+7. [day seven](https://waiting-caribou.glitch.me/day07) (broken)
+8. [day eight](https://waiting-caribou.glitch.me/day08)
 
 Made by [Glitch](https://glitch.com/)
 -------------------------------------
