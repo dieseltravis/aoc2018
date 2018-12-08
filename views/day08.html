@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>eight</title>
+    <meta name="description" content="eight">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>
+        eight
+      </h1>
+      <p>
+        <a href="//adventofcode.com/2018/day/8">adventofcode.com/2018/day/8</a>
+      </p>
+    </header>
+
+    <main>
+      <h2>
+        part 1
+      </h2>
+      <form method="POST" action="/day08part1">
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <code id="part1"></code>
+        <!-- <input type="submit" /> -->
+      </form>
+      <hr />
+      <h2>
+        part 2
+      </h2>
+      <form method="POST" action="/day08part2">
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
+        <code id="part2"></code>
+        <!-- <input type="submit" /> -->
+      </form>
+    </main>
+
+    <footer>
+      Made with <a href="https://glitch.com">Glitch</a>!
+    </footer>
+    
+    <script>
+      const input1 = document.getElementById("input1");
+      const part1 = document.getElementById('part1');
+      
+      input1.addEventListener("change", ev => {
+        const data1 = input1.value.trim().split(" ");
+        
+        let total = 0;
+        
+        const calcMeta = function (chunk, nodeCount) {
+          if (chunk.length > 0 && nodeCount > 0) {
+            let childCount = chunk.shift();
+            let metaCount = chunk.shift();
+            
+            for (let c = 0; c < childCount; c++) {
+              // process children before getting metadata
+              calcMeta(chunk, childCount);
+            }
+            
+            for (let m = 0; m < metaCount; m++) {
+              let metaVal = chunk.shift();
+              total += metaVal;
+            }
+          }
+          return;
+        }
+        
+        calcMeta(header, 1);
+        
+        part1.innerText = total;
+      });
+      
+      const input2 = document.getElementById("input2");
+      const part2 = document.getElementById('part2');
+      
+      input2.addEventListener("change", ev => {
+        const data2 = input2.value.trim().split(" ");
+        let header = data2.map(Number);
+        
+        let total = 0;
+        
+        const calcMeta = function (chunk, nodeCount) {
+          let nodeVal = 0;
+          if (chunk.length > 0 && nodeCount > 0) {
+            let childCount = chunk.shift();
+            let metaCount = chunk.shift();
+            
+            let childVals = [];
+            for (let c = 0; c < childCount; c++) {
+              // process children before getting metadata
+              childVals[c] = calcMeta(chunk, childCount);
+            }
+            
+            for (let m = 0; m < metaCount; m++) {
+              let metaVal = chunk.shift();
+              if (childCount === 0) {
+                nodeVal += metaVal;
+              } else if (metaVal <= childCount) {
+                nodeVal += childVals[metaVal - 1];
+              }
+            }
+          }
+          return nodeVal;
+        }
+        
+        total = calcMeta(header, 1);
+        
+        part2.innerText = total;
+      });
+      
+    </script>
+
+    <div class="glitchButton"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+
+  </body>
+</html>

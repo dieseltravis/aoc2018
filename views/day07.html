@@ -46,11 +46,63 @@
     <script>
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
+      const parse = /Step (\w) must be finished before step (\w) can begin/;
       
       input1.addEventListener("change", ev => {
         const data1 = input1.value.trim().split("\n");
+        const steps = data1.map(step => {
+          let match = step.match(parse);
+          return { step: match[1], goesBefore: match[2] };
+        });
+        //const ordered = steps.reduce((items, step) => {
+        //  return items;
+        //}, []);
         
-        part1.innerText = "todo";
+        //find boundaries
+        let start = steps.filter(s1 => {
+          return (steps.filter(s2 => s2.goesBefore === s1.step).length === 0);
+        })[0].step;
+        //console.log(start);
+        
+        let end = steps.filter(s1 => {
+          return (steps.filter(s2 => s2.step === s1.goesBefore).length === 0);
+        })[0].goesBefore;
+        //console.log(end);
+        
+        let sorted = [start, end];
+        /*
+        const sorter = function (step) {
+          let nextStep = steps.find(s => s.step === step.goesBefore);
+          console.info(step, nextStep);
+          if (nextStep) {
+            let index = sorted.findIndex(s => s === step.step);
+            sorted.splice(index + 1, 0, nextStep.step);
+            sorter(nextStep);
+          }
+          return;
+        };
+        sorter(steps[0]);
+        */
+        const sorter2 = function (letter) {
+          let nextLetters = steps.filter(s => s.step === letter).map(s => s.goesBefore).sort();
+          //console.log(nextLetters);
+          if (nextLetters.length > 0) {
+            let letterIndex = sorted.findIndex(l => l === letter);
+            nextLetters.forEach(l => {
+              if (sorted.indexOf(l) === -1) {
+                letterIndex++;
+                sorted.splice(letterIndex, 0, l);
+              }
+            });
+            nextLetters.forEach(sorter2);
+          }
+          return;
+        };
+        sorter2(start);
+        //console.log(sorted);
+        
+        // not GHAIJZTEDRSKQUWYLNBOPX
+        part1.innerText = sorted.join("");
       });
       
       const input2 = document.getElementById("input2");
