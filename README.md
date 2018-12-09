@@ -15,6 +15,7 @@ solutions:
 6. [day six](https://waiting-caribou.glitch.me/day06)
 7. [day seven](https://waiting-caribou.glitch.me/day07) (broken)
 8. [day eight](https://waiting-caribou.glitch.me/day08)
+9. [day nine](https://waiting-caribou.glitch.me/day09)
 
 Made by [Glitch](https://glitch.com/)
 -------------------------------------
