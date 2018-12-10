@@ -1,6 +1,6 @@
 {
   "name": "waiting-caribou",
-  "version": "0.1.9",
+  "version": "2018.12.10",
   "description": "Travis's Advent of Code 2018",
   "main": "server.js",
   "scripts": {
