@@ -52,9 +52,6 @@
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
       const parse = /Step (\w) must be finished before step (\w) can begin/;
-      const move = function(arr, from, to) {
-        arr.splice(to, 0, arr.splice(from, 1)[0]);
-      };
       
       input1.addEventListener("change", ev => {
         console.time("part1");
@@ -107,7 +104,7 @@
         });
         
         // not GHAIJZTEDRSKQUWYLNBOPX
-        ////// CFGMVHNPAEWBRDIZQUSJYTKLOX 
+        // not CFGMVHNPAEWBRDIZQUSJYTKLOX 
         part1.innerText = sorted.join("");
         console.timeEnd("part1");
       });
@@ -118,6 +115,64 @@
       input2.addEventListener("change", ev => {
         console.time("part2");
         const data2 = input2.value.trim().split("\n");
+        const L = {A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:10,K:11,L:12,M:13,N:14,O:15,P:16,Q:17,R:18,S:19,T:20,U:21,V:22,W:23,X:24,Y:25,Z:26};
+        
+        const all_steps = data2.map(step => {
+          let match = step.match(parse);
+          return [ match[1], match[2] ];
+        });
+        
+        let sorted = [];
+        let remaining_steps = all_steps.slice();
+        
+        let sec = 0;
+        let work = [];
+        //{ Second: 0, Worker1: "", Worker2: "", Done: "" }
+        while (remaining_steps.length > 0) {
+          const allfound = remaining_steps.filter(a => remaining_steps.every(b => b[1] !== a[0])).map(s => s[0]).sort();
+          
+          while (allfound.length > 0) {
+            
+            let found1 = allfound[0];
+            let found2 = allfound.length > 1 ? allfound[1] : null;
+            
+            for (let i = 0; i < L[found1]; i++) {
+              work[sec] = { w1: "", w2: "", d: "" };
+              work[sec].w1 = found1;
+              if (found2 !== null && i < L[found2]) {
+                work[sec].w2 = found2;
+              }
+              work[sec].d = sorted.join("");
+              sec++;
+            }
+            
+            sorted.push(found1);
+
+            remaining_steps.forEach((s, idx) => {
+                if (s[0] === found1) {
+                  remaining_steps[idx] = [ s[1], null ];
+                }
+            });
+            
+            if (found2 !== null) {
+              sorted.push(found2);
+
+              remaining_steps.forEach((s, idx) => {
+                  if (s[0] === found2) {
+                    remaining_steps[idx] = [ s[1], null ];
+                  }
+              });
+            }
+
+            var nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
+            while (nullIndex > -1) {
+              remaining_steps.splice(nullIndex, 1);
+              nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
+            }
+          }
+        }
+        
+        console.table(work);
 
         part2.innerText = "todo";
         console.timeEnd("part2");
