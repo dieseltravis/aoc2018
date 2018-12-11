@@ -120,6 +120,68 @@ app.post("/day09part2", function (request, response) {
   console.timeEnd("part2");
 });
 
+const getCellPower = function (x, y, serial) {
+        let rackId = x + 10;
+        let power = rackId * y;
+        power += serial;
+        power = power * rackId;
+        
+        let str = power + "";
+        if (str.length >= 3) {
+          let char = str[str.length - 3];
+          power = Number(char);
+        } else {
+          power = 0;
+        }
+        
+        power -= 5;
+        
+        return power;
+      };
+app.post("/day11part2", function (request, response) {
+  console.time("part2");
+  const input2 = request.body.input.trim();
+  
+  const serial = Number(input2);
+        let grid = [];
+        
+        for (let y = 1; y <= 300; y++) {
+          grid[y] = [];
+          for (let x = 1; x <= 300; x++) {
+            grid[y][x] = getCellPower(x, y, serial);
+          }
+        }
+        
+        let scores = {};
+        for (let s = 1; s <= 300; s++) {
+          for (let y = 1; y <= 300 - s; y++) {
+            for (let x = 1; x <= 300 - s; x++) {
+              scores[x+","+y+","+s] = 0;
+              for (let yy = 0; yy < s; yy++) {
+                for (let xx = 0; xx < s; xx++) {
+                  scores[x+","+y+","+s] += grid[y+yy][x+xx];
+                }
+              }
+            }
+          }
+        }
+        
+        let maxx = Object.keys(scores).reduce((max, key) => {
+          if (scores[key] > max.val) {
+            max.coord = key;
+            max.val = scores[key];
+          }
+          return max;
+        }, { coord: "", val: 0 });
+        
+        console.log(maxx);
+        
+        //part1.innerText = maxx.coord;
+  
+  response.status(200).send(maxx);
+  console.timeEnd("part2");
+});
+
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
