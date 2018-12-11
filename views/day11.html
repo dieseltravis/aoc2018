@@ -40,7 +40,7 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/11/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
     </main>
 
@@ -117,7 +117,7 @@
       input2.addEventListener("change", ev => {
         console.time("part2");
         const data2 = input2.value.trim();
-        
+        /*
         const serial = Number(data2);
         let grid = [];
         
@@ -151,8 +151,8 @@
         }, { coord: "", val: 0 });
         
         console.log(maxx);
-        
-        part1.innerText = maxx.coord;
+        */
+        part2.innerText = "press submit, look in server console";
         console.timeEnd("part2");
       });
       
