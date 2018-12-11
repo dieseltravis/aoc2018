@@ -164,6 +164,10 @@ app.post("/day11part2", function (request, response) {
               }
             }
           }
+          
+          if (s % 3 ===0) {
+            console.log((s/3) + "%");
+          }
         }
         
         let maxx = Object.keys(scores).reduce((max, key) => {
