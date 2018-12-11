@@ -59,152 +59,51 @@
       input1.addEventListener("change", ev => {
         console.time("part1");
         const data1 = input1.value.trim().split("\n");
-        let letters = [];
-        const steps = data1.map(step => {
+        
+        const all_steps = data1.map(step => {
           let match = step.match(parse);
-          letters.push(match[1]);
-          letters.push(match[2]);
-          return { step: match[1], goesBefore: match[2] };
+          return [ match[1], match[2] ];
         });
-        
-        const uniqueLetters = [...new Set(letters)];
-
-        //const ordered = steps.reduce((items, step) => {
-        //  return items;
-        //}, []);
-        
-        //find boundaries
-        //let start = steps.filter(s1 => {
-        //  return (steps.filter(s2 => s2.goesBefore === s1.step).length === 0);
-        //})[0].step;
-        //console.log(start);
-        
-        //let end = steps.filter(s1 => {
-        //  return (steps.filter(s2 => s2.step === s1.goesBefore).length === 0);
-        //})[0].goesBefore;
-        //console.log(end);
-        
-        //let sorted = [start, end];
-        /*
-        const sorter = function (step) {
-          let nextStep = steps.find(s => s.step === step.goesBefore);
-          console.info(step, nextStep);
-          if (nextStep) {
-            let index = sorted.findIndex(s => s === step.step);
-            sorted.splice(index + 1, 0, nextStep.step);
-            sorter(nextStep);
-          }
-          return;
-        };
-        sorter(steps[0]);
-        */
-        /*
-        const sorter2 = function (letter) {
-          let nextLetters = steps.filter(s => s.step === letter).map(s => s.goesBefore).sort();
-          //console.log(nextLetters);
-          if (nextLetters.length > 0) {
-            let letterIndex = sorted.findIndex(l => l === letter);
-            nextLetters.forEach(l => {
-              if (sorted.indexOf(l) === -1) {
-                letterIndex++;
-                sorted.splice(letterIndex, 0, l);
-              }
-            });
-            nextLetters.forEach(sorter2);
-          }
-          return;
-        };
-        sorter2(start);*/
-        //console.log(sorted);
-        let condensed = uniqueLetters.reduce((all, letter) => {
-          // all = [ { id: "", parents: [], children: [], removeFrom: -1 } ]
-          let stepIndex = -1;
-          // find step id in all
-          if (all.length > 0) {
-            stepIndex = all.findIndex(i => i.id === letter);
-          }
-          //console.log(stepIndex);
-          if (stepIndex === null || stepIndex === -1) {
-            all.push({ id: letter, parents: [], children: [], removeFrom: -1 });
-            stepIndex = all.findIndex(i => i.id === letter);
-          }
-          
-          let obj = all[stepIndex];
-          
-          // find letters that go before
-          obj.parents = steps.filter(s => s.goesBefore === letter).map(s => s.step).sort();
-          
-          // find letters that go after
-          obj.children = steps.filter(s => s.step === letter).map(s => s.goesBefore).sort();
-          
-          return all;
-        }, []);
-        
-        //console.table(condensed);
-        //console.log("start: ", 
-        //            condensed.filter(c => c.parents.length === 0), 
-        //            "end: ", 
-        //            condensed.filter(c => c.children.length === 0));
-        
         let sorted = [];
-        const sorter3 = function (group) {
-          if (!group || group.length === 0) return;
-          
-          group.forEach(c => {
-            let groupIndex = sorted.indexOf(c.id);
-            if (groupIndex >= 0) c.removeFrom = groupIndex;
-            groupIndex = Math.max(0, groupIndex);
-            // get max indexes of parents
-            let max = c.parents.reduce((max, p) => {
-              max = Math.max(max, sorted.findIndex(s => s === p));
-              return max+1;
-            }, groupIndex);
-            c.newIndex = max;
-            
-            console.log(c);
-            //if (max === groupIndex) {
-            //  max = groupIndex;
-            //  groupIndex++;
-            //}
-            // insert after max of parents' indexes
-            //sorted.splice(max + 1, 0, c.id);
-          });
-          
-          // blank out old items that exist in sorted array first
-          group.filter(d => d.removeFrom > -1).forEach(d => {
-            //sorted.splice(d.removeFrom, 1);
-            sorted[d.removeFrom] = "";
-            d.removeFrom = -1;
-          });
+        
+        let remaining_steps = all_steps.slice();
+        
+        while (remaining_steps.length > 0) {
+          // find [from] not in [to]
+          const found = remaining_steps.filter(a => remaining_steps.every(b => b[1] !== a[0]))
+            // get [from]
+            .map(s => s[0])
+            //sort alpha, return first item
+            .sort()[0];
 
-          group = group.sort((a, b) => a.newIndex - b.newIndex || a.id > b.id ? 1 : -1);
+          // sorted.push found
+          sorted.push(found);
           
-          //const newIndexes = [...new Set(group.map(item => item.newIndex))];
-          let increment = 0;
-          group.forEach(c => {
-            c.newIndex += increment;
-            //if (c.removeFrom > -1 &&) {
-            //}
-            increment++;
-            sorted.splice(c.newIndex, 0, c.id);
+          //console.log(found, remaining_steps.filter(s => s[0] === found));
+          // remove found from [ from, to ]
+          remaining_steps.forEach((s, idx) => {
+            // & switch pairs to be [ to, null ]
+              if (s[0] === found) {
+                //console.log(idx);
+                remaining_steps[idx] = [ s[1], null ];
+              }
           });
-          //console.log(group);
+  
+          // if any steps are null/null, remove them
+          var nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
+          while (nullIndex > -1) {
+            remaining_steps.splice(nullIndex, 1);
+            nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
+          }
           
-          // run for each group of children
-          //group.forEach(c => sorter3(condensed.filter(cc => c.children.indexOf(cc.id) > -1)));
-          // get items that have these as parents
-          const groupIds = group.map(g => g.id);
-          let children = condensed.filter(c => groupIds.some(id => c.parents.indexOf(id) > -1));
-          //console.log(children);
-          sorter3(children);
-        };
-        // start with group that has no parents
-        sorter3(condensed.filter(c => c.parents.length === 0));
+          //console.log(sorted, remaining_steps);
+          //break;
+        }
 
         // test
-        steps.forEach(s => {
-          //console.info(s, sorted.indexOf(s.step), sorted.indexOf(s.goesBefore));
-          //console.assert(sorted.indexOf(s.step) < sorted.indexOf(s.goesBefore), "bad step");
+        all_steps.forEach(s => {
+          console.info(s, sorted.indexOf(s[0]), sorted.indexOf(s[1]));
+          console.assert(sorted.indexOf(s[0]) < sorted.indexOf(s[1]), "bad step");
         });
         
         // not GHAIJZTEDRSKQUWYLNBOPX
