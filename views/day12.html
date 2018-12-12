@@ -42,7 +42,7 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/12/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
     </main>
 
@@ -146,6 +146,7 @@
         
         // not 928, too low
         part1.innerText = lastIndex;
+        
         console.timeEnd("part1");
       });
       
@@ -153,6 +154,7 @@
       const part2 = document.getElementById('part2');
       
       input2.addEventListener("change", ev => {
+        /*
         console.time("part2");
         const data2 = input2.value.trim().split("\n");
         
@@ -211,6 +213,8 @@
         
         part2.innerText = lastIndex;
         console.timeEnd("part2");
+        */
+        part2.innerText = "click the button and watch the server console";
       });
       
     </script>
