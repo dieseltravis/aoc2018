@@ -53,12 +53,96 @@
     <script>
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
+      
+      const state = /initial state: ([\#\.]+)/;
+      const rule = /([\#\.]{5}) =\> ([\#\.])/;
+      const plants = /\#/g;
+      //const empties = /^(\.+)[\#\.]*\#(\.+)$/;
+      const emptyEnds = /^\.+|\.+$/g;
             
       input1.addEventListener("change", ev => {
         console.time("part1");
-        const data1 = input1.value.trim();
+        const data1 = input1.value.trim().split("\n");
         
-        part1.innerText = maxx.coord;
+        const gens = 20;
+        
+        let current = data1[0].match(state)[1];
+        //console.log(data1.slice(2));
+        let rules = data1.slice(2).map(r => {
+          let parsed = r.match(rule);
+          return {
+            pattern: parsed[1],
+            replacement: parsed[2],
+          };
+        });
+        
+        let pots = current.match(plants).length;
+        console.log(0, current, pots);
+        
+        let indexOfPots = 0;
+        let left = 0;
+        
+        for (let i = 0; i < gens; i++) {
+          // pad with enough empties to match patterns
+          //let ends = current.match(empties);
+          //let start = (ends && ends.length > 1) ? ends[1].length : 0;
+          //let end = (ends && ends.length > 2) ? ends[2].length : 0;
+          //if (start < 5) {
+          //  current = ".".repeat(5 - start) + current;
+          //}
+          //if (start < 5) {
+          //  current += ".".repeat(5 - end);
+          //}
+          current = "...." + current /*.replace(emptyEnds, '')*/ + "....";
+          left -= 4;
+          
+          let next = ".".repeat(current.length).split("");
+          
+          rules.forEach(r => {
+            for (let c = current.indexOf("#")-2, l = current.lastIndexOf("#")+2; c <= l; c++) {
+              //let lpad = c === 0 ? ".." : c === 1 ? "." : "";
+              //let rpad = c === l - 1 ? ".." : c === l - 2 ? "." : "";
+              //let start = c === 0 || c === 1 ? 0 : c - 2;
+              //let end = c === l - 1 ||c === l - 2 ? l - 1 : c + 2;
+              let sub = current.substring(c - 2, c + 3);
+              //console.log(c, sub, r.pattern, sub === r.pattern)
+              if (sub === r.pattern) {
+                next[c] = r.replacement;
+                //console.log(c, next);
+              //} else {
+                //next[c] = current[c];
+              }
+            }
+          });
+          
+          // sum of indexes
+          next.forEach((n, i) => {
+            if (n === "#") {
+              indexOfPots += (i + left);
+            }
+          });
+          
+          next = next.join("");
+          
+          //plant count
+          let m = next.match(plants);
+          let potcount = m !== null ? m.length : 0;
+          pots += potcount;
+          
+          current = next;
+
+          console.log(i+1, current, potcount, pots, left, indexOfPots);
+        }
+        
+        let lastIndex = current.split("").reduce((total, n, i) => {
+            if (n === "#") {
+              total += (i + left);
+            }
+          return total;
+        }, 0);
+        
+        // not 928, too low
+        part1.innerText = lastIndex;
         console.timeEnd("part1");
       });
       
@@ -68,6 +152,8 @@
       input2.addEventListener("change", ev => {
         console.time("part2");
         const data2 = input2.value.trim();
+        
+        // figure out how many generations it takes to repeat starting pattern?
         
         part2.innerText = "press submit, look in server console";
         console.timeEnd("part2");
