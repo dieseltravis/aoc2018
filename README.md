@@ -18,7 +18,7 @@ solutions:
 9. [day nine](https://waiting-caribou.glitch.me/day09)
 10. [day ten](https://waiting-caribou.glitch.me/day10)
 11. [day eleven](https://waiting-caribou.glitch.me/day11)
-12. [day twelve](https://waiting-caribou.glitch.me/day12)
+12. [day twelve](https://waiting-caribou.glitch.me/day12) (part 2 broken)
 
 Made by [Glitch](https://glitch.com/)
 -------------------------------------
