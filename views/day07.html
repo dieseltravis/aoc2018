@@ -134,17 +134,28 @@
           while (allfound.length > 0) {
             
             let found1 = allfound[0];
-            let found2 = allfound.length > 1 ? allfound[1] : null;
+            let found2 = allfound.length > 1 && (work[sec] === undefined || work[sec] === null || work[sec].w2 === "") ? allfound[1] : null;
             
-            for (let i = 0; i < L[found1]; i++) {
-              work[sec] = { w1: "", w2: "", d: "" };
+            /*
+            let i = 0;
+            for (i = 0; i < L[found1]; i++) {
+              work[sec] = work[sec] || { w1: "", w2: "", d: "" };
               work[sec].w1 = found1;
-              if (found2 !== null && i < L[found2]) {
+              if (found2 !== null && i < L[found2] && work[sec].w2 === "") {
                 work[sec].w2 = found2;
               }
               work[sec].d = sorted.join("");
               sec++;
             }
+            
+            // continue with found 2 into the future, if it was bigger
+            if (found2 !== null && i < L[found2]) {
+              for (let i2 = 0; i2 < (L[found2] - i); i2++) {
+                work[sec + i2] = work[sec + i2] || { w1: "", w2: "", d: "" };
+                work[sec + i2].w2 = found2;
+              }
+            }
+            */
             
             sorted.push(found1);
 

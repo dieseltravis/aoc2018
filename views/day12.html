@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>twelve</title>
+    <meta name="description" content="twelve">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/day11" title="previous" rel="prev">⬅</a> 
+        <a href="/" title="up">⬆</a> 
+        <a href="/day13" title="next" rel="next">➡</a>
+      </nav>
+      <h1>
+        twelve
+      </h1>
+      <p>
+        <a href="//adventofcode.com/2018/day/12">adventofcode.com/2018/day/12</a>
+      </p>
+    </header>
+
+    <main>
+      <h2>
+        part 1
+      </h2>
+      <form method="POST" action="/day12part1">
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/12/input" target="_blank" class="get-input">get input</a>
+        <code id="part1"></code>
+        <!-- <input type="submit" /> -->
+      </form>
+      <hr />
+      <h2>
+        part 2
+      </h2>
+      <form method="POST" action="/day12part2">
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/12/input" target="_blank" class="get-input">get input</a>
+        <code id="part2"></code>
+        <input type="submit" />
+      </form>
+    </main>
+
+    <footer>
+      Made with <a href="https://glitch.com">Glitch</a>!
+    </footer>
+    
+    <script>
+      const input1 = document.getElementById("input1");
+      const part1 = document.getElementById('part1');
+            
+      input1.addEventListener("change", ev => {
+        console.time("part1");
+        const data1 = input1.value.trim();
+        
+        part1.innerText = maxx.coord;
+        console.timeEnd("part1");
+      });
+      
+      const input2 = document.getElementById("input2");
+      const part2 = document.getElementById('part2');
+      
+      input2.addEventListener("change", ev => {
+        console.time("part2");
+        const data2 = input2.value.trim();
+        
+        part2.innerText = "press submit, look in server console";
+        console.timeEnd("part2");
+      });
+      
+    </script>
+
+    <div class="glitchButton"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+
+  </body>
+</html>
