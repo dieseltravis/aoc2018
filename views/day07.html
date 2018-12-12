@@ -87,7 +87,7 @@
           });
   
           // if any steps are null/null, remove them
-          var nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
+          let nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
           while (nullIndex > -1) {
             remaining_steps.splice(nullIndex, 1);
             nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
@@ -125,16 +125,26 @@
         let sorted = [];
         let remaining_steps = all_steps.slice();
         
-        let sec = 0;
-        let work = [];
+        //let sec = 0;
+        //let work = [];
         //{ Second: 0, Worker1: "", Worker2: "", Done: "" }
+        let workers = [[],[]];
+        
+        //let safety = 100;
+        
         while (remaining_steps.length > 0) {
-          const allfound = remaining_steps.filter(a => remaining_steps.every(b => b[1] !== a[0])).map(s => s[0]).sort();
+          console.log("remaining_steps", remaining_steps.length);
+          //if (safety-- < 0) break;
+
+          const allfound = [...new Set(remaining_steps.filter(a => remaining_steps.every(b => b[1] !== a[0])).map(s => s[0]).sort())];
           
-          while (allfound.length > 0) {
-            
+          if (allfound.length > 0) {
+            console.log("allfound", allfound.length);
+            //if (safety-- < 0) break;
+
             let found1 = allfound[0];
-            let found2 = allfound.length > 1 && (work[sec] === undefined || work[sec] === null || work[sec].w2 === "") ? allfound[1] : null;
+            //  && (work[sec] === undefined || work[sec] === null || work[sec].w2 === "")
+            let found2 = allfound.length > 1 ? allfound[1] : null;
             
             /*
             let i = 0;
@@ -157,35 +167,57 @@
             }
             */
             
+            // this is close, but not quite
+            let max = found2 !== null ? Math.max(L[found1], L[found2]) : L[found1];
+            console.log("max", max);
+            for (let i = 0; i <= max; i++) {
+              //if (safety-- < 0) break;
+              
+              if (i < L[found1]) {
+                workers[0].push(found1);
+              }
+              if (found2 === null) {
+                workers[1].push(".");
+              } else if (i < L[found2]) {
+                workers[1].push(found2);
+              }
+            }
+            
             sorted.push(found1);
 
             remaining_steps.forEach((s, idx) => {
-                if (s[0] === found1) {
-                  remaining_steps[idx] = [ s[1], null ];
-                }
+              console.log("found1", idx, found1, s[0], s[0] === found1);
+              if (s[0] === found1) {
+                
+                remaining_steps[idx] = [ s[1], null ];
+                console.log("shifted", idx, remaining_steps[idx]);
+              }
             });
             
             if (found2 !== null) {
               sorted.push(found2);
 
               remaining_steps.forEach((s, idx) => {
-                  if (s[0] === found2) {
-                    remaining_steps[idx] = [ s[1], null ];
-                  }
+                //console.log("found2", found2, s[0]);
+                if (s[0] === found2) {
+                  remaining_steps[idx] = [ s[1], null ];
+                }
               });
             }
 
-            var nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
+            // remove null steps
+            let nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
             while (nullIndex > -1) {
+              console.log("nullIndex", nullIndex);
               remaining_steps.splice(nullIndex, 1);
               nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
             }
           }
         }
         
-        console.table(work);
+        console.log(workers);
 
-        part2.innerText = "todo";
+        part2.innerText = Math.max(workers[0].length, workers[1].length);
         console.timeEnd("part2");
       });
       

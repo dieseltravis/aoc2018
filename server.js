@@ -3,6 +3,7 @@ const app = express();
 const timeout = require('connect-timeout'); //express v4
 
 app.use(timeout(1200000));
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -20,8 +21,8 @@ for (let i = 1; i <= 25; i++) {
   });
 }
 
-app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // for when server js is needed: 
 app.post("/day00part1", function (request, response) {
