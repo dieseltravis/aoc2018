@@ -184,6 +184,83 @@ app.post("/day11part2", function (request, response) {
 });
 
 
+const state = /initial state: ([\#\.]+)/;
+const rule = /([\#\.]{5}) =\> ([\#\.])/;
+const plants = /\#/g;
+//const empties = /^(\.+)[\#\.]*\#(\.+)$/;
+const emptyEnds = /^\.+|\.+$/g;
+
+const emptyFirst = /^(\.+)/g;
+const emptyLast = /\.+$/g;
+
+app.post("/day12part2", function (request, response) {
+  console.time("part2");
+  const input2 = request.body.input;
+  const data2 = input2.trim().split("\n");
+        
+  // figure out how many generations it takes to repeat starting pattern?
+  const gens = 50000000000;
+  // then mod by repeat amount
+
+  let initial = data2[0].match(state)[1];
+  let current = initial
+
+  let rules = data2.slice(2).map(r => {
+    let parsed = r.match(rule);
+    return {
+      pattern: parsed[1],
+      replacement: parsed[2],
+    };
+  });
+
+  let left = 0;
+
+  console.log("starting the big loop...");
+  for (let i = 0; i < gens; i++) {
+    // adjust dots & left starting index
+    let predots = current.match(emptyFirst);
+    if (predots !== null && predots.length === 2) {
+      left += predots[1].length;
+      left -= 4;
+      current = "...." + current.replace(emptyFirst, "");
+    }
+    current = current.replace(emptyLast, "") + "....";
+
+    let next = ".".repeat(current.length).split("");
+
+    rules.forEach(r => {
+      for (let c = current.indexOf("#")-2, l = current.lastIndexOf("#")+2; c <= l; c++) {
+        let sub = current.substring(c - 2, c + 3);
+        if (sub === r.pattern) {
+          next[c] = r.replacement;
+        }
+      }
+    });
+
+    next = next.join("");
+    current = next;
+    if (current.indexOf(initial) > -1) {
+      console.log("repeating at " + i);
+      break;
+    }
+    
+    if (i % (gens / 100) === 0) {
+      console.log((i * 100 / gens) + "%");
+    }
+  }
+
+  let lastIndex = current.split("").reduce((total, n, i) => {
+      if (n === "#") {
+        total += (i + left);
+      }
+    return total;
+  }, 0);
+        
+  
+  response.status(200).send({ output: lastIndex });
+  console.timeEnd("part2");
+});
+
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
