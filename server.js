@@ -205,6 +205,7 @@ app.post("/day12part2", function (request, response) {
   let initial = data2[0].match(state)[1];
   let current = initial
 
+  // TODO: switch from strings to binary
   let rules = data2.slice(2).map(r => {
     let parsed = r.match(rule);
     return {
