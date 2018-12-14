@@ -265,6 +265,12 @@
               }
             }
           }
+          
+          //sort
+          trains.sort((a,b) => { 
+            let dy = a.y - b.y;
+            return dy !== 0 ? dy : a.x - b.x;
+          });
         }
         
         let train = trains.filter(t => !t.isCrashed)[0];
