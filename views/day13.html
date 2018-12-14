@@ -53,12 +53,115 @@
     <script>
       const input1 = document.getElementById("input1");
       const part1 = document.getElementById('part1');
+      const piece = {
+      // piece & heading directions
+        "\\": { N: "W", E: "S", S: "E", W: "N" }, 
+        "/":  { N: "E", E: "N", S: "W", W: "S" }, 
+        "-":  { N: "N", E: "E", S: "S", W: "W" }, 
+        "|":  { N: "N", E: "E", S: "S", W: "W" }, 
+        "+":  { N: "N", E: "E", S: "S", W: "W" } 
+      };
+      const turn = { 
+        "L": { N: "W", E: "N", S: "E", W: "S" }, 
+        "S": { N: "N", E: "E", S: "S", W: "W" }, 
+        "R": { N: "E", E: "S", S: "W", W: "N" }
+      };
+      const dir = { 
+        N: { t: "^", dx: 0, dy:-1 }, 
+        E: { t: ">", dx: 1, dy:0 }, 
+        S: { t: "v", dx: 0, dy:1 }, 
+        W: { t: "<", dx: -1, dy:0 }
+      };
             
       input1.addEventListener("change", ev => {
         console.time("part1");
-        const data1 = input1.value.trim().split("\n");
+        const data1 = input1.value.split("\n");
         
-        part1.innerText = "todo";
+        const track = data1.map(t => t.split(""));
+        
+        // find and load trains
+        let trains = [];
+        for (let y = 0, yl = track.length; y < yl; y++) {
+          for (let x = 0, xl = track[y].length; x < xl; x++) {
+            let p = track[y][x];
+            if (p === "^") {
+              trains.push({ x: x, y: y, dir: "N", turn: -1 });
+              track[y][x] = "|";
+            } else if (p === ">") {
+              trains.push({ x: x, y: y, dir: "E", turn: -1 });
+              track[y][x] = "-";
+            } else if (p === "v") {
+              trains.push({ x: x, y: y, dir: "S", turn: -1 });
+              track[y][x] = "|";
+            } else if (p === "<") {
+              trains.push({ x: x, y: y, dir: "W", turn: -1 });
+              track[y][x] = "-";
+            }
+          }
+        }
+        
+        //console.log(track.map(c => c.join("")).join("\n"));
+        
+        let isCrash = !trains.map(t => t.x+","+t.y).every((t,i,a) => {
+          //console.log(t, a.slice(0, i), a.slice(0, i).indexOf(t), a.slice(i+1), a.slice(i+1).indexOf(t));
+          return a.slice(0, i).indexOf(t) === -1 && a.slice(i+1).indexOf(t) === -1;
+        });
+        
+        let tick = 0;
+        //let lastPos = { x: 0, y: 0 }; 
+        let lastPos = "";
+        let safety = 1000;
+        while (!isCrash && safety--) {
+          tick++;
+          // move each
+          for (let i = 0, l = trains.length; i < l; i++) {
+          //trains.forEach(train => {
+            let train = trains[i];
+            //console.log(train);
+            let lookdir = dir[train.dir];
+            //console.log(lookdir);
+            let look = { 
+              x: train.x + lookdir.dx, 
+              y: train.y + lookdir.dy 
+            };
+            //console.log(look);
+            let found = track[look.y][look.x];
+            let newdir = train.dir;
+            if (found === "+") {
+              let tk = Object.keys(turn);
+              train.turn = (train.turn + 1) % tk.length;
+              newdir = turn[tk[train.turn]][train.dir];
+            } else {
+              newdir = piece[found][train.dir];
+            }
+            train.dir = newdir;
+            train.x = look.x;
+            train.y = look.y;
+            
+            isCrash = !trains.map(t => t.x+","+t.y).every((t,idx,a) => {
+              return a.slice(0, idx).indexOf(t) === -1 && a.slice(idx+1).indexOf(t) === -1;
+            });
+            if (isCrash) {
+              lastPos = train.x + "," + train.y;
+              break;
+            }
+          }//);
+            
+          //sort
+          trains.sort((a,b) => { 
+            let dy = a.y - b.y;
+            return dy !== 0 ? dy : a.x - b.x;
+          });
+        }
+        
+        console.log(trains, tick, isCrash, safety);
+        
+        //let lastPos = trains.map(t => t.x+","+t.y).filter((t,i,a) => {
+        //  return a.slice(0, i).indexOf(t) > -1 || a.slice(i+1).indexOf(t) > -1;
+        //})[0];
+        
+        part1.innerText = lastPos;
+        // not 81,30
         console.timeEnd("part1");
       });
       
@@ -67,10 +170,119 @@
       
       input2.addEventListener("change", ev => {
         console.time("part2");
-        const data2 = input2.value.trim().split("\n");
+        const data2 = input2.value.split("\n");
         
+        const track = data2.map(t => t.split(""));
         
-        part2.innerText = "todo";
+        // find and load trains
+        let trains = [];
+        for (let y = 0, yl = track.length; y < yl; y++) {
+          for (let x = 0, xl = track[y].length; x < xl; x++) {
+            let p = track[y][x];
+            if (p === "^") {
+              trains.push({ x: x, y: y, dir: "N", turn: -1, isCrashed: false });
+              track[y][x] = "|";
+            } else if (p === ">") {
+              trains.push({ x: x, y: y, dir: "E", turn: -1, isCrashed: false });
+              track[y][x] = "-";
+            } else if (p === "v") {
+              trains.push({ x: x, y: y, dir: "S", turn: -1, isCrashed: false });
+              track[y][x] = "|";
+            } else if (p === "<") {
+              trains.push({ x: x, y: y, dir: "W", turn: -1, isCrashed: false });
+              track[y][x] = "-";
+            }
+          }
+        }
+        
+        //console.log(track.map(c => c.join("")).join("\n"));
+        
+        let tick = 0;
+        
+        let lastPos = "";
+        let safety = 100000;
+        let crashed = 0;
+        while ((trains.length - crashed) > 1 && safety--) {
+          tick++;
+          // move each
+          for (let i = 0, l = trains.length; i < l; i++) {
+            let train = trains[i];
+            if (!train.isCrashed) {
+              let lookdir = dir[train.dir];
+              if (lookdir) {
+                let look = { 
+                  x: train.x + lookdir.dx, 
+                  y: train.y + lookdir.dy 
+                };
+                if (look.y >= 0 && look.y < track.length) {
+                  if (look.x >= 0 && look.x < track[look.y].length) {
+                    let found = track[look.y][look.x];
+                    let newdir = train.dir;
+                    if (found && found === "+") {
+                      let tk = Object.keys(turn);
+                      train.turn = (train.turn + 1) % tk.length;
+                      newdir = turn[tk[train.turn]][train.dir];
+                    } else if (found && piece[found]) {
+                      newdir = piece[found][train.dir];
+                    } else {
+                      console.log("found error: ", i, train, look, found, track[train.y][train.x]);
+                      train.isCrashed = true;
+                      crashed++;
+                    }
+                    train.dir = newdir;
+                    train.prev = train.x + "," + train.y;
+                    train.x = look.x;
+                    train.y = look.y;
+                  } else {
+                    console.log("x error: ", i, train, lookdir, look, track[train.y][train.x]);
+                    train.isCrashed = true;
+                    crashed++;
+                  }
+                } else {
+                  console.log("y error: ", i, train, lookdir, look, track[train.y][train.x]);
+                  train.isCrashed = true;
+                  crashed++;
+                }
+              } else {
+                console.log("lookdir error: ", i, train, lookdir, dir, track[train.y][train.x]);
+                train.isCrashed = true;
+                crashed++;
+              }
+
+              let isCrash = !trains.filter(t => !t.isCrashed).map(t => t.x+","+t.y).every((t,idx,a) => {
+                return a.slice(0, idx).indexOf(t) === -1 && a.slice(idx+1).indexOf(t) === -1;
+              });
+              
+              if (isCrash) {
+                train.isCrashed = true;
+                crashed++;
+                trains.forEach(t => { 
+                  if (!t.isCrashed && t.x === train.x && t.y === train.y) {
+                    t.isCrashed = true;
+                    crashed++;
+                  }
+                });
+              }
+            }
+          }
+        }
+        
+        let train = trains.filter(t => !t.isCrashed)[0];
+        lastPos = train.x + "," + train.y;
+        
+        // check next (just in case)...
+        let lookdir = dir[train.dir];
+        let look = { 
+          x: train.x + lookdir.dx, 
+          y: train.y + lookdir.dy 
+        };
+        train.next = look.x + "," + look.y;
+
+        console.log(trains, tick, safety);
+
+        // not 21,84, 
+        // not 71,97, not 72,97, not 73,97
+        part2.innerText = lastPos;
         console.timeEnd("part2");
       });
       
