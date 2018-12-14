@@ -56,11 +56,41 @@
             
       input1.addEventListener("change", ev => {
         console.time("part1");
-        const data1 = input1.value.split("\n");
+        const data1 = input1.value.trim();
         
+        let chars = Number(data1);
+        let digits = [3, 7];
         
+        let elf1 = 0; // ()
+        let elf2 = 1; // []
         
-        part1.innerText = "><";
+        let val1 = digits[elf1];
+        let val2 = digits[elf2];
+        
+        while (digits.length <= 10 + chars) {
+          let moreDigits = val1 + val2;
+          
+          // too slow!
+          //digits = digits.concat((moreDigits + "").split("").map(Number));
+          if (moreDigits >= 10) {
+            digits.push(1);
+          }
+          digits.push(moreDigits % 10);
+
+          elf1 = (elf1 + val1 + 1) % digits.length;
+          elf2 = (elf2 + val2 + 1) % digits.length;
+
+          
+          val1 = digits[elf1];
+          val2 = digits[elf2];
+
+          //console.log("elf1:" + elf1 + ":" + val1, "; elf2:" + elf2 + ":" + val2);
+          //console.log(digits.join(" "));
+        }
+        
+        let answer = digits.slice(chars, 10 + chars).join("");
+        
+        part1.innerText = answer;
         console.timeEnd("part1");
       });
       
@@ -69,9 +99,58 @@
       
       input2.addEventListener("change", ev => {
         console.time("part2");
-        const data2 = input2.value.split("\n");
+        const data2 = input2.value.trim().split("");
         
-        part2.innerText = "><";
+        const match = data2.map(Number);
+        const mLength = match.length;
+
+        let digits = [3, 7];
+        
+        let elf1 = 0; // ()
+        let elf2 = 1; // []
+        
+        let val1 = digits[elf1];
+        let val2 = digits[elf2];
+        
+        let safety = 100000000;
+        let answer = -1;
+        
+        while (safety--) {
+          let moreDigits = val1 + val2;
+          if (moreDigits >= 10) {
+            digits.push(1);
+          }
+          digits.push(moreDigits % 10);
+          let dLength = digits.length;
+
+          elf1 = (elf1 + val1 + 1) % dLength;
+          elf2 = (elf2 + val2 + 1) % dLength;
+          
+          val1 = digits[elf1];
+          val2 = digits[elf2];
+          
+          if (mLength <= dLength) {
+            let isMatched = match.reduce((found, digit, idx) => {
+              return found && (digit === digits[dLength - mLength + idx]);
+            }, true);
+            if (isMatched) {
+              answer = dLength - mLength;
+              break;
+            } else if (moreDigits >= 10) {
+              // look again, one digit further
+              isMatched = match.reduce((found, digit, idx) => {
+                return found && (digit === digits[dLength - mLength + idx - 1]);
+              }, true);
+              if (isMatched) {
+                answer = dLength - mLength - 1;
+                break;
+              }
+            }
+          }
+        }
+        console.log(safety);
+        
+        part2.innerText = answer;
         console.timeEnd("part2");
       });
       
