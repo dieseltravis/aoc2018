@@ -202,17 +202,21 @@ app.post("/day12part2", function (request, response) {
   const gens = 50000000000;
   // then mod by repeat amount
 
-  let initial = data2[0].match(state)[1].split("").map(c => c === '#');
+  const initial = data2[0].match(state)[1].split("").map(c => c === '#' ? 1 : 0);
+  const initialLength = initial.length;
+  const initialNum = parseInt(initial.join(""), 2);
+  //console.log(initial, initialLength, initialNum);
   let current = initial.slice();
 
   // switch from strings to binary
   let rules = data2.slice(2).map(r => {
     let parsed = r.match(rule);
     return [ 
-      parsed[1].split("").map(c => c === '#'),
-      parsed[2] === '#'
+      parsed[1].split("").map(c => c === '#' ? 1 : 0),
+      parsed[2] === '#' ? 1 : 0
     ];
   });
+  //console.log(rules);
 
   let left = 0;
 
@@ -220,40 +224,53 @@ app.post("/day12part2", function (request, response) {
   for (let i = 0; i < gens; i++) {
     // adjust dots & left starting index
     let predots = 0;
-    while (current.indexOf(false) === 0) {
+    while (current.indexOf(0) === 0) {
       current.shift();
       predots++;
     }
     left += predots;
     left -= 4;
-    current = [false, false, false, false].concat(current);
+    current = [0, 0, 0, 0].concat(current);
 
-    while (current[current.length - 1] === false) {
+    while (current[current.length - 1] === 0) {
       current.pop();
     }
-    current = current.concat([false, false, false, false]);
-
-    let next = new Array(current.length).fill(false);
+    current = current.concat([0, 0, 0, 0]);
+    
+    const cLength = current.length;
+    let next = new Array(cLength).fill(0);
 
     rules.forEach(r => {
-      for (let c = current.indexOf(true)-2, l = current.lastIndexOf(true)+2; c <= l; c++) {
-        let sub = current.slice(c - 2, c + 3);
-        if (r[0].reduce((match, b, idx) => match && (b === sub[idx]), true)) {
+      for (let c = 2; c < cLength - 3; c++) {
+        if (r[0].every((b, idx) => (b === current[idx + c - 2]))) {
           next[c] = r[1];
         }
       }
     });
 
     current = next;
-    //.every((value, index) => value === array2[index])
-    //if (current.indexOf(initial) > -1) {
-    //  console.log("repeating at " + i);
-    //  break;
-    //}
     
-    if (i % (gens / 100) === 0) {
+    let isMatch = false;
+    for (let offset = 0, l = cLength - initialLength; offset < l; offset++) {
+      let bits = 0;
+      for (let b = initialLength; b--;) {
+        bits << current[offset + b];
+      }
+      if (bits === initialNum) {
+        isMatch = true;
+        break;
+      }
+    }
+    if (isMatch) {
+      console.log("repeating at " + i);
+      break;
+    }
+    
+    if (i % (gens / 1000) === 0) {
       console.log((i * 100 / gens) + "%");
     }
+    
+    //console.log(current.map(b => b ? '#' : '.').join(""));
   }
 
   let lastIndex = current.reduce((total, n, i) => {
