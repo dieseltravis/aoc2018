@@ -21,6 +21,7 @@ solutions:
 12. [day twelve](https://waiting-caribou.glitch.me/day12) (part 2 broken)
 13. [day thirteen](https://waiting-caribou.glitch.me/day13)
 14. [day fourteen](https://waiting-caribou.glitch.me/day14)
+15. [day fifteen](https://waiting-caribou.glitch.me/day15) (day 15 is bullshit)
 
 Made by [Glitch](https://glitch.com/)
 -------------------------------------
