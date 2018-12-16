@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>sixteen</title>
+    <meta name="description" content="sixteen">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/day15" title="previous" rel="prev">⬅</a> 
+        <a href="/" title="up">⬆</a> 
+        <a href="/day17" title="next" rel="next">➡</a>
+      </nav>
+      <h1>
+        sixteen
+      </h1>
+      <p>
+        <a href="//adventofcode.com/2018/day/16">adventofcode.com/2018/day/16</a>
+      </p>
+    </header>
+
+    <main>
+      <h2>
+        part 1
+      </h2>
+      <form method="POST" action="/day16part1">
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/16/input" target="_blank" class="get-input">get input</a>
+        <code id="part1"></code>
+        <!-- <input type="submit" /> -->
+      </form>
+      <hr />
+      <h2>
+        part 2
+      </h2>
+      <form method="POST" action="/day16part2">
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/16/input" target="_blank" class="get-input">get input</a>
+        <code id="part2"></code>
+        <!-- <input type="submit" /> -->
+      </form>
+    </main>
+
+    <footer>
+      Made with <a href="https://glitch.com">Glitch</a>!
+    </footer>
+    
+    <script>
+      const parser = /Before:\s+\[(-?\d+), (-?\d+), (-?\d+), (-?\d+)\]\n(-?\d+) (-?\d+) (-?\d+) (-?\d+)\nAfter:\s+\[(-?\d+), (-?\d+), (-?\d+), (-?\d+)\]/;
+      const i = {
+        addr: (r,a,b,c) => r[c] = r[a] + r[b],
+        addi: (r,a,b,c) => r[c] = r[a] + b,
+        mulr: (r,a,b,c) => r[c] = r[a] * r[b],
+        muli: (r,a,b,c) => r[c] = r[a] * b,
+        banr: (r,a,b,c) => r[c] = r[a] & r[b],
+        bani: (r,a,b,c) => r[c] = r[a] & b,
+        borr: (r,a,b,c) => r[c] = r[a] | r[b],
+        bori: (r,a,b,c) => r[c] = r[a] | b,
+        setr: (r,a,b,c) => r[c] = r[a],
+        seti: (r,a,b,c) => r[c] = a,
+        gtir: (r,a,b,c) => r[c] = a > r[b] ? 1 : 0,
+        gtri: (r,a,b,c) => r[c] = r[a] > b ? 1 : 0,
+        gtrr: (r,a,b,c) => r[c] = r[a] > r[b] ? 1 : 0,
+        eqir: (r,a,b,c) => r[c] = a === r[b] ? 1 : 0,
+        eqri: (r,a,b,c) => r[c] = r[a] === b ? 1 : 0,
+        eqrr: (r,a,b,c) => r[c] = r[a] === r[b] ? 1 : 0
+      };
+
+      const input1 = document.getElementById("input1");
+      const part1 = document.getElementById('part1');
+      
+      input1.addEventListener("change", ev => {
+        console.time("part1");
+        const data1 = input1.value.trim();
+        const parts = data1.split("\n\n\n\n");
+        const first = parts[0].split("\n\n").map(c => {
+          console.log(c);
+          let o = c.match(parser).slice(1).map(Number);
+          return {
+            before: o.slice(0,4),
+            func: o.slice(4,8),
+            after: o.slice(8)
+          }
+        });
+        //const second = parts[1].split("\n").map(l => l.split(" ").map(Number) );
+        
+        let poop = [];
+        first.forEach(fart => {
+          let eq = 0;
+          Object.keys(i).forEach(k => {
+            let r = fart.before.slice();
+            i[k](r, fart.func[1], fart.func[2], fart.func[3]);
+            let test = r.reduce((test, v, idx) => test && (v === fart.after[idx]), true);
+            if (test) {
+              eq++;
+            }
+          });
+          poop.push(eq);
+        });
+        
+        let answer = poop.filter(turd => turd >= 3).length;
+        part1.innerText = answer;
+        console.timeEnd("part1");
+      });
+      
+      const input2 = document.getElementById("input2");
+      const part2 = document.getElementById('part2');
+      
+      input2.addEventListener("change", ev => {
+        console.time("part2");
+        const data2 = input2.value.trim();
+        
+        const parts = data2.split("\n\n\n\n");
+        const first = parts[0].split("\n\n").map(c => {
+          //console.log(c);
+          let o = c.match(parser).slice(1).map(Number);
+          return {
+            before: o.slice(0,4),
+            func: o.slice(4,8),
+            after: o.slice(8)
+          }
+        });
+        const second = parts[1].split("\n").map(l => l.split(" ").map(Number) );
+        
+        let iMap = {
+          addr: -1,
+          addi: -1,
+          mulr: -1,
+          muli: -1,
+          banr: -1,
+          bani: -1,
+          borr: -1,
+          bori: -1,
+          setr: -1,
+          seti: -1,
+          gtir: -1,
+          gtri: -1,
+          gtrr: -1,
+          eqir: -1,
+          eqri: -1,
+          eqrr: -1
+        };
+        // geez, do i even need this???
+        let iMapPotato = {
+          addr: { yes: [], no: [] },
+          addi: { yes: [], no: [] },
+          mulr: { yes: [], no: [] },
+          muli: { yes: [], no: [] },
+          banr: { yes: [], no: [] },
+          bani: { yes: [], no: [] },
+          borr: { yes: [], no: [] },
+          bori: { yes: [], no: [] },
+          setr: { yes: [], no: [] },
+          seti: { yes: [], no: [] },
+          gtir: { yes: [], no: [] },
+          gtri: { yes: [], no: [] },
+          gtrr: { yes: [], no: [] },
+          eqir: { yes: [], no: [] },
+          eqri: { yes: [], no: [] },
+          eqrr: { yes: [], no: [] }
+        };
+        
+        let poop = [];
+        first.forEach(fart => {
+          let eq = 0;
+          let last = "";
+          let potential = [];
+          Object.keys(i).forEach(k => {
+            if (iMap[k] === -1) {
+              let r = fart.before.slice();
+              i[k](r, fart.func[1], fart.func[2], fart.func[3]);
+              let test = r.reduce((test, v, idx) => test && (v === fart.after[idx]), true);
+              if (test) {
+                eq++;
+                last = k;
+                potential.push({ k: k, idx: fart.func[0] });
+                iMapPotato[k].yes.push(fart.func[0]);
+              } else {
+                iMapPotato[k].no.push(fart.func[0]);
+              }
+            }
+          });
+          if (eq === 1) {
+            // shortcut
+            console.log("shortcut: ", last, fart.func[0]);
+            iMap[last] = fart.func[0];
+          }
+          poop.push(potential);
+        });
+        
+        //console.log(iMap);
+        //console.log(iMapPotato);
+        //console.log(poop);
+        //let answer = poop.filter(turd => turd === 1).length;
+        
+        /*
+        Object.keys(iMapPotato).forEach(k => {
+          if (iMap[k] === -1) {
+            // reset yes & no to arrays of distinct items 
+            iMapPotato[k].yes = [ ...new Set( iMapPotato[k].yes ) ];
+            iMapPotato[k].no = [ ...new Set( iMapPotato[k].no ) ];
+          } else {
+            iMapPotato[k] = iMap[k];
+          }
+        });
+        
+        Object.keys(iMapPotato).forEach(k => {
+          if (iMap[k] === -1) {
+            // filter out values that don't appear in the no list
+            iMapPotato[k].yes = iMapPotato[k].yes.filter(p => iMapPotato[k].no.indexOf(p) === -1);
+            // also filter out values from yes that have already been assigned
+            iMapPotato[k].yes = iMapPotato[k].yes.filter(p => Object.values(iMap).indexOf(p) === -1);
+            
+            if (iMapPotato[k].yes.length === 1) {
+              iMap[k] = iMapPotato[k].yes[0];
+              console.log(k, iMapPotato[k].yes);
+            }
+          }
+        });
+        */
+        
+        console.log("if any of these are -1 then uncomment the above code and debug: ", iMap);
+        
+        let flip = [];
+        Object.keys(iMap).forEach(k => flip[iMap[k]] = k);
+        
+        console.log("flipped: ", flip);
+
+        let r = [ 0, 0, 0, 0 ];
+        
+        second.forEach(s => {
+          i[flip[s[0]]](r, s[1], s[2], s[3]);
+        });
+        
+        console.log(r);
+        
+        part2.innerText = r[0];
+        console.timeEnd("part2");
+      });
+      
+    </script>
+
+    <div class="glitchButton"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+
+  </body>
+</html>
