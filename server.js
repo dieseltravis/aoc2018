@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const timeout = require('connect-timeout'); //express v4
+// run the same functions on the front & back
+const f = require("./public/funs");
 
 app.use(timeout(1200000));
 
@@ -12,26 +14,33 @@ app.get('/', function(request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-// bind 25 days of html files
-for (let i = 1; i <= 25; i++) {
-  let day = ("" + i).padStart(2, '0');
-  console.log(day);
-  app.get('/day' + day, function(request, response) {
-    response.sendFile(__dirname + '/views/day' + day + '.html');
-  });
-}
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// for when server js is needed: 
-app.post("/day00part1", function (request, response) {
-  console.time("part1");
-  const input1 = request.body.input;
+// bind 25 days of html files, and post functions for both parts of each
+for (let d = 1; d <= 25; d++) {
+  let day = ("" + d).padStart(2, '0');
+  //console.log(day);
+  app.get('/day' + day, function(request, response) {
+    response.sendFile(__dirname + '/views/day' + day + '.html');
+  });
   
-  response.status(200).send({ output: input1 });
-  console.timeEnd("part1");
-});
+  for (let p = 1; p <= 2; p++) {
+    app.post("/day" + day + "part" + p, function (request, response) {
+      const timer = "day " + d + ", part " + p;
+      console.time(timer);
+      
+      const answer = f.funs(d, p)(request.body.input);
+      
+      console.log(answer);
+      console.timeEnd(timer);
+      
+      response.status(200).send({ output: answer });
+    });
+  }
+}
+
+//TODO: put all of these in funs.js
 
 app.post("/day05part2", function (request, response) {
   console.time("part2");
