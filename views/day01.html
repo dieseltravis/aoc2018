@@ -26,52 +26,32 @@
       <h2>
         part 1
       </h2>
-      <textarea id="input1" placeholder="input"></textarea>
-      <a href="https://adventofcode.com/2018/day/1/input" target="_blank" class="get-input">get input</a>
-      <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+      <form method="POST" action="/day01part1">
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/1/input" target="_blank" class="get-input">get input</a>
+        <code id="part1"></code>
+        <input type="submit" />
+      </form>
       <hr />
       <h2>
         part 2
       </h2>
-      <textarea id="input2" placeholder="input"></textarea>   
-      <a href="https://adventofcode.com/2018/day/1/input" target="_blank" class="get-input">get input</a>
-      <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+      <form method="POST" action="/day01part2">
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>   
+        <a href="https://adventofcode.com/2018/day/1/input" target="_blank" class="get-input">get input</a>
+        <code id="part2"></code>
+        <input type="submit" />
+      </form>
     </main>
 
     <footer>
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
 
-    <script src="/client.js"></script>
-    <script>
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        /* ***************** WARNING: NEVER USE! ******************** */
-        part1.innerText = eval(input1.value);
-        //                ^-- this is bad, don't ever do this
-        console.timeEnd("part1");
-      });
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        var i = 0, 
-            current = 0, 
-            freqs = {}, 
-            data2 = input2.value.trim().split('\n').map(v => parseInt(v, 10));
-        
-        while(!freqs['x'+current]) {
-          freqs['x'+current] = 1;
-          current += data2[i];
-          i += 1;
-          i = i % data2.length;
-        }
-        
-        part2.innerText = current;
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 1);
     </script>
     
     <!-- include the Glitch button to show what the webpage is about and
