@@ -30,7 +30,7 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/5/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
       <hr />
       <h2>
@@ -48,58 +48,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById('part1');
-      const rx = /aA|bB|cC|dD|eE|fF|gG|hH|iI|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ|Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|Oo|Pp|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz/;
-
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        const data1 = input1.value.trim();
-        let output = data1;
-        while (rx.test(output)) output = output.replace(rx, "");
-        part1.innerText = output.length;
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim();
-        /*
-        let rxs = [];
-        for (let a = 97; a < (97+26); a++) {
-          rxs.push(new RegExp(String.fromCharCode(a), "ig"));
-        }
-        */
-        const rxs = [/a/ig,/b/ig,/c/ig,/d/ig,/e/ig,/f/ig,/g/ig,/h/ig,/i/ig,/j/ig,/k/ig,/l/ig,/m/ig,/n/ig,/o/ig,/p/ig,/q/ig,/r/ig,/s/ig,/t/ig,/u/ig,/v/ig,/w/ig,/x/ig,/y/ig,/z/ig];
-        
-        part2.innerText = "(this takes a long time!)";
-        console.log("starting...");
-        
-        // todo: use a web worker?
-        //setTimeout(function () {
-          let i = 0;
-          const length = rxs.reduce((chars, rxl) => {
-            let output = data2;
-            output = output.replace(rxl, "");
-            while (rx.test(output)) output = output.replace(rx, "");
-            chars = Math.min(chars, output.length);
-            
-            i++;
-            part2.innerText = Math.round(i / 26 * 100) + "%";
-            console.log(Math.round(i / 26 * 100) + "%");
-            
-            return chars;
-          }, data2.length);
-
-          part2.innerText = length;
-        //}, 200);
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 5);
     </script>
 
     <div class="glitchButton"></div>

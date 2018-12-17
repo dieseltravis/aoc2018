@@ -30,7 +30,7 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/3/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
       <hr />
       <h2>
@@ -40,7 +40,7 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/3/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
     </main>
 
@@ -48,104 +48,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById('part1');
-      const parse = /\#(\d+)\s\@\s(\d+),(\d+):\s(\d+)x(\d+)/;
-      //                1          2     3       4     5
-      input1.addEventListener("change", ev => {
-        const data1 = input1.value.trim().split("\n").map(o => {
-          console.time("part1");
-          let match = o.match(parse);
-          return {
-            id: parseInt(match[1], 10),
-            x: parseInt(match[2], 10),
-            y: parseInt(match[3], 10),
-            w: parseInt(match[4], 10),
-            h: parseInt(match[5], 10)
-          };
-        });
-        
-        const plot = data1.reduce((p, o) => {
-          let y = o.y + 1,
-              x = o.x + 1;
-          
-          for (let h = y, hh = y + o.h; h < hh; h++) {
-            for (let w = x, ww = x + o.w; w < ww; w++) {
-              if (!p[h]) {
-                p[h] = [];
-              }
-              if (!p[h][w]) {
-                p[h][w] = 1
-              } else {
-                p[h][w]++;
-              }
-            }
-          }
-
-          return p;
-        }, []);
-        
-        const conflict = plot.reduce((c, a) => {
-          a.forEach((p) => {
-            if (p > 1) {
-              c++;
-            }
-          });
-
-          return c;
-        }, 0);
-        
-        part1.innerText = conflict;
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim().split("\n").map(o => {
-          let match = o.match(parse);
-          return {
-            id: parseInt(match[1], 10),
-            x: parseInt(match[2], 10),
-            y: parseInt(match[3], 10),
-            w: parseInt(match[4], 10),
-            h: parseInt(match[5], 10),
-            hasConflict: false
-          };
-        });
-        
-        const plot = data2.reduce((p, o) => {
-          let y = o.y + 1,
-              x = o.x + 1;
-          
-          for (let h = y, hh = y + o.h; h < hh; h++) {
-            for (let w = x, ww = x + o.w; w < ww; w++) {
-              if (!p[h]) {
-                p[h] = [];
-              }
-              if (!p[h][w]) {
-                p[h][w] = o.id
-              } else {
-                data2.filter(oo => {
-                  return (oo.id === p[h][w]);
-                })[0].hasConflict = true;
-                p[h][w] = o.id;
-                o.hasConflict = true;
-              }
-            }
-          }
-
-          return p;
-        }, []);
-        
-        const noConflict = data2.filter(o => { return !o.hasConflict; });
-        
-        part2.innerText = noConflict[0].id;
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 3);
     </script>
 
     <div class="glitchButton"></div>

@@ -42,32 +42,6 @@ for (let d = 1; d <= 25; d++) {
 
 //TODO: put all of these in funs.js
 
-app.post("/day05part2", function (request, response) {
-  console.time("part2");
-  const input2 = request.body.input;
-  const data2 = input2.trim();
-  const rx = /aA|bB|cC|dD|eE|fF|gG|hH|iI|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ|Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|Oo|Pp|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz/g;
-  const rxs = [/a/ig,/b/ig,/c/ig,/d/ig,/e/ig,/f/ig,/g/ig,/h/ig,/i/ig,/j/ig,/k/ig,/l/ig,/m/ig,/n/ig,/o/ig,/p/ig,/q/ig,/r/ig,/s/ig,/t/ig,/u/ig,/v/ig,/w/ig,/x/ig,/y/ig,/z/ig];
-
-  let i = 0;
-  const length = rxs.reduce((chars, rxl) => {
-    let output = data2;
-    output = output.replace(rxl, "");
-    while (rx.test(output)) output = output.replace(rx, "");
-    chars = Math.min(chars, output.length);
-    
-    i++;
-    console.log(Math.round(i / 26 * 100) + "%");
-    
-    return chars;
-  }, data2.length);
-  
-  console.log(length);
-  
-  response.status(200).send({ output: length });
-  console.timeEnd("part2");
-});
-
 const parse5 = /(\d+) players; last marble is worth (\d+) points/;
 app.post("/day09part2", function (request, response) {
   console.log("day 9, part 2");

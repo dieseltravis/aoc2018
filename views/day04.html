@@ -30,7 +30,7 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/4/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
       <hr />
       <h2>
@@ -40,7 +40,7 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/4/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input type="submit" />
       </form>
     </main>
 
@@ -48,155 +48,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById('part1');
-
-      const pattern = /\[1518-(\d\d)-(\d\d)\s(\d\d):(\d\d)\]\s(Guard \#(\d+) begins shift|falls asleep|wakes up)/;
-      //                       1      2       3      4         5        6
-      
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        const data1 = input1.value.trim().split("\n").sort();
-        let counter = {};
-        let lastId = 0;
-        let asleep = new Date();
-        let awake = new Date();
-        
-        data1.forEach(l => {
-          let parsed = l.match(pattern),
-              month = Number(parsed[1]),
-              day = Number(parsed[2]),
-              hour = Number(parsed[3]),
-              min = Number(parsed[4]),
-              entry = parsed[5],
-              cmd = entry.split(" ")[0];
-          
-          if (cmd === "Guard") {
-            // new guard
-            lastId = parsed[6];
-            counter[lastId] = counter[lastId] || { minutesAsleep: 0, sleepMinute: []};
-          } else if (cmd === "falls") {
-            // asleep
-            asleep = new Date(2018, month, day, hour, min);
-          } else if (cmd === "wakes") {
-            // awake
-            awake = new Date(2018, month, day, hour, min);
-            
-            let diffMs = awake - asleep;
-            let diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-            counter[lastId].minutesAsleep += diffMins;
-            
-            for (let x = asleep.getMinutes(), y = awake.getMinutes(); x < y; x++) {
-              counter[lastId].sleepMinute[x] = counter[lastId].sleepMinute[x] || 0;
-              counter[lastId].sleepMinute[x]++;
-            }
-          }
-              
-        });
-        
-        //console.table(counter[2851].sleepMinute);
-        
-        let maxKey = 0,
-            maxMins = 0;
-        for (let key in counter) {
-          if (counter[key].minutesAsleep > maxMins) {
-            maxKey = key;
-            maxMins = counter[key].minutesAsleep;
-          }
-        }
-        
-        let maxSleep = counter[maxKey].sleepMinute,
-            maxMin = -1,
-            maxMinSleep = 0;
-        for (let i = 0, l = maxSleep.length; i < l; i++) {
-          if (maxSleep[i] !== null && maxSleep[i] > maxMinSleep) {
-            maxMin = i;
-            maxMinSleep = maxSleep[i];
-          }
-        }
-        
-        //console.info(maxKey, maxMin, (maxKey * maxMin));
-        
-        part1.innerText = (maxKey * maxMin);
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim().split("\n").sort();
-        
-        let counter = {};
-        let lastId = 0;
-        let asleep = new Date();
-        let awake = new Date();
-        
-        data2.forEach(l => {
-          let parsed = l.match(pattern),
-              month = Number(parsed[1]),
-              day = Number(parsed[2]),
-              hour = Number(parsed[3]),
-              min = Number(parsed[4]),
-              entry = parsed[5],
-              cmd = entry.split(" ")[0];
-          
-          if (cmd === "Guard") {
-            // new guard
-            lastId = parsed[6];
-            counter[lastId] = counter[lastId] || { minutesAsleep: 0, sleepMinute: []};
-          } else if (cmd === "falls") {
-            // asleep
-            asleep = new Date(2018, month, day, hour, min);
-          } else if (cmd === "wakes") {
-            // awake
-            awake = new Date(2018, month, day, hour, min);
-            
-            let diffMs = awake - asleep;
-            let diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-            counter[lastId].minutesAsleep += diffMins;
-            
-            for (let x = asleep.getMinutes(), y = awake.getMinutes(); x < y; x++) {
-              counter[lastId].sleepMinute[x] = counter[lastId].sleepMinute[x] || 0;
-              counter[lastId].sleepMinute[x]++;
-            }
-          }
-              
-        });
-        
-        let maxKey = 0,
-            maxMin = -1,
-            maxMinSleep = 0;
-
-        for (let key in counter) {
-          let guard = counter[key],
-              maxSleep = guard.sleepMinute;
-          
-          guard.maxMin = -1;
-          guard.maxMinSleep = 0;
-          
-          for (let i = 0, l = maxSleep.length; i < l; i++) {
-            if (maxSleep[i] !== null && maxSleep[i] > guard.maxMinSleep) {
-              guard.maxMin = i;
-              guard.maxMinSleep = maxSleep[i];
-            }
-          }
-          
-          if (guard.maxMinSleep > maxMinSleep) {
-            maxKey = key;
-            maxMin = guard.maxMin;
-            maxMinSleep = guard.maxMinSleep;
-          }
-        }
-        
-        //console.info(maxKey, maxMin, (maxKey * maxMin));
-        
-        part2.innerText = (maxKey * maxMin);
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 4);
     </script>
 
     <div class="glitchButton"></div>
