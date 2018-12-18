@@ -1314,12 +1314,166 @@
     },
     "day18": {
       "part1": data => {
+        const input = data.trim().split("\n").map(r => r.split(""));
+        
+        // # 2
+        const LUMBER = 2;
+        // | 1
+        const TREES = 1;
+        // . 0
+        const EMPTY = 0
+        
+        let grid = input.map(r => r.map(c => c === "." ? EMPTY : c === "|" ? TREES : 2));
+        const MINUTES = 10;
+        
+        for (let minute = 0; minute < MINUTES; minute++) {
+          let next = [];
+          for (let y = 50; y--;) {
+            next[y] = next[y] || [];
+            
+            for (let x = 50; x--;) {
+              next[y][x] = grid[y][x];
+              
+              //for (let yy = y - 1; yy < (y + 1); y++) {
+              //  for (let xx = x - 1; xx < (x + 1); x++) {
+              //    if (xx !== x && yy !== y){}
+              //  }
+              //}
+              
+              let a,b,c,
+                  d,  e,
+                  f,g,h;
+              
+              a=y-1>=0&&x-1>=0?grid[y-1][x-1]:-1;
+              b=y-1>=0?grid[y-1][x]:-1;
+              c=y-1>=0&&x+1<50?grid[y-1][x+1]:-1;
+              d=x-1>=0?grid[y][x-1]:-1;
+              e=x+1<50?grid[y][x+1]:-1;
+              f=y+1<50&&x-1>=0?grid[y+1][x-1]:-1;
+              g=y+1<50?grid[y+1][x]:-1;
+              h=y+1<50&&x+1<50?grid[y+1][x+1]:-1;
+              
+              const surround = [a,b,c,
+                                d,  e,
+                                f,g,h];
+                    
+              if (grid[y][x] === EMPTY && surround.filter(s => s === TREES).length >= 3) {
+                next[y][x] = TREES;
+              } else if (grid[y][x] === TREES && surround.filter(s => s === LUMBER).length >= 3) {
+                next[y][x] = LUMBER;
+              } else if (grid[y][x] === LUMBER) {
+                if (surround.filter(s => s === LUMBER).length >= 1 && surround.filter(s => s === TREES).length >= 1) {
+                  next[y][x] = LUMBER;
+                } else {
+                  next[y][x] = EMPTY;
+                }
+              }
+            }
+          }
+          grid = next;
+        }
       
-        return "TODO";
+        const counts = grid.reduce((yCounts, y) => {
+          y.forEach(x => {
+            yCounts[x]++;
+          });
+          return yCounts;
+        }, [0, 0, 0]);
+        return counts[TREES] * counts[LUMBER];
       },
       "part2": data => {
-      
-        return "TODO";
+        const input = data.trim().split("\n").map(r => r.split(""));
+        
+        // # 2
+        const LUMBER = 2;
+        // | 1
+        const TREES = 1;
+        // . 0
+        const EMPTY = 0
+        
+        let grid = input.map(r => r.map(c => c === "." ? EMPTY : c === "|" ? TREES : 2));
+        
+        const startcounts = grid.reduce((yCounts, y) => {
+          y.forEach(x => {
+            yCounts[x]++;
+          });
+          return yCounts;
+        }, [0, 0, 0]);
+        
+        const start = startcounts[TREES] * startcounts[LUMBER];
+        console.log(start);
+        
+        const MINUTES = 1000000000;
+        
+        let minute;
+        for (minute = 0; minute < MINUTES; minute++) {
+          let next = [];
+          for (let y = 50; y--;) {
+            next[y] = next[y] || [];
+            
+            for (let x = 50; x--;) {
+              next[y][x] = grid[y][x];
+              
+              //for (let yy = y - 1; yy < (y + 1); y++) {
+              //  for (let xx = x - 1; xx < (x + 1); x++) {
+              //    if (xx !== x && yy !== y){}
+              //  }
+              //}
+              
+              let a,b,c,
+                  d,  e,
+                  f,g,h;
+              
+              a=y-1>=0&&x-1>=0?grid[y-1][x-1]:-1;
+              b=y-1>=0?grid[y-1][x]:-1;
+              c=y-1>=0&&x+1<50?grid[y-1][x+1]:-1;
+              d=x-1>=0?grid[y][x-1]:-1;
+              e=x+1<50?grid[y][x+1]:-1;
+              f=y+1<50&&x-1>=0?grid[y+1][x-1]:-1;
+              g=y+1<50?grid[y+1][x]:-1;
+              h=y+1<50&&x+1<50?grid[y+1][x+1]:-1;
+              
+              const surround = [a,b,c,
+                                d,  e,
+                                f,g,h];
+                    
+              if (grid[y][x] === EMPTY && surround.filter(s => s === TREES).length >= 3) {
+                next[y][x] = TREES;
+              } else if (grid[y][x] === TREES && surround.filter(s => s === LUMBER).length >= 3) {
+                next[y][x] = LUMBER;
+              } else if (grid[y][x] === LUMBER) {
+                if (surround.filter(s => s === LUMBER).length >= 1 && surround.filter(s => s === TREES).length >= 1) {
+                  next[y][x] = LUMBER;
+                } else {
+                  next[y][x] = EMPTY;
+                }
+              }
+            }
+          }
+          grid = next;
+          
+          // look for a repeat...
+          const counts = grid.reduce((yCounts, y) => {
+            y.forEach(x => {
+              yCounts[x]++;
+            });
+            return yCounts;
+          }, [0, 0, 0]);
+
+          const finish = counts[TREES] * counts[LUMBER];
+          
+          // repeating?
+          if (start === finish) {
+            console.log(start, finish, minute);
+            break;
+          }
+          
+          if (minute % (MINUTES / 10000) === 0) {
+            console.log((minute * 100 / MINUTES) + "%");
+          }
+        }
+        
+        return "repeating at minute:" + minute; 
       }
     },
     "day19": {
