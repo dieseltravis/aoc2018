@@ -30,7 +30,8 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/8/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button1" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
       <hr />
       <h2>
@@ -40,7 +41,8 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/8/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button2" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
     </main>
 
@@ -48,81 +50,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById('part1');
-      
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        const data1 = input1.value.trim().split(" ");
-        let header = data1.map(Number);
-        
-        let total = 0;
-        
-        const calcMeta = function (chunk, nodeCount) {
-          if (chunk.length > 0 && nodeCount > 0) {
-            let childCount = chunk.shift();
-            let metaCount = chunk.shift();
-            
-            for (let c = 0; c < childCount; c++) {
-              // process children before getting metadata
-              calcMeta(chunk, childCount);
-            }
-            
-            for (let m = 0; m < metaCount; m++) {
-              let metaVal = chunk.shift();
-              total += metaVal;
-            }
-          }
-          return;
-        }
-        
-        calcMeta(header, 1);
-        
-        part1.innerText = total;
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim().split(" ");
-        let header = data2.map(Number);
-        
-        let total = 0;
-        
-        const calcMeta = function (chunk, nodeCount) {
-          let nodeVal = 0;
-          if (chunk.length > 0 && nodeCount > 0) {
-            let childCount = chunk.shift();
-            let metaCount = chunk.shift();
-            
-            let childVals = [];
-            for (let c = 0; c < childCount; c++) {
-              // process children before getting metadata
-              childVals[c] = calcMeta(chunk, childCount);
-            }
-            
-            for (let m = 0; m < metaCount; m++) {
-              let metaVal = chunk.shift();
-              if (childCount === 0) {
-                nodeVal += metaVal;
-              } else if (metaVal <= childCount) {
-                nodeVal += childVals[metaVal - 1];
-              }
-            }
-          }
-          return nodeVal;
-        }
-        
-        total = calcMeta(header, 1);
-        
-        part2.innerText = total;
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 8);
     </script>
 
     <div class="glitchButton"></div>

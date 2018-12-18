@@ -30,7 +30,8 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/7/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button1" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
       <hr />
       <h2>
@@ -40,7 +41,8 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/7/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button2" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
     </main>
 
@@ -48,190 +50,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById('part1');
-      const parse = /Step (\w) must be finished before step (\w) can begin/;
-      
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        const data1 = input1.value.trim().split("\n");
-        
-        const all_steps = data1.map(step => {
-          let match = step.match(parse);
-          return [ match[1], match[2] ];
-        });
-        let sorted = [];
-        
-        let remaining_steps = all_steps.slice();
-        
-        while (remaining_steps.length > 0) {
-          // find [from] not in [to]
-          const found = remaining_steps.filter(a => remaining_steps.every(b => b[1] !== a[0]))
-            // get [from]
-            .map(s => s[0])
-            //sort alpha, return first item
-            .sort()[0];
-
-          // sorted.push found
-          sorted.push(found);
-          
-          //console.log(found, remaining_steps.filter(s => s[0] === found));
-          // remove found from [ from, to ]
-          remaining_steps.forEach((s, idx) => {
-            // & switch pairs to be [ to, null ]
-              if (s[0] === found) {
-                //console.log(idx);
-                remaining_steps[idx] = [ s[1], null ];
-              }
-          });
-  
-          // if any steps are null/null, remove them
-          let nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
-          while (nullIndex > -1) {
-            remaining_steps.splice(nullIndex, 1);
-            nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
-          }
-          
-          //console.log(sorted, remaining_steps);
-          //break;
-        }
-
-        // test
-        all_steps.forEach(s => {
-          console.info(s, sorted.indexOf(s[0]), sorted.indexOf(s[1]));
-          console.assert(sorted.indexOf(s[0]) < sorted.indexOf(s[1]), "bad step");
-        });
-        
-        // not GHAIJZTEDRSKQUWYLNBOPX
-        // not CFGMVHNPAEWBRDIZQUSJYTKLOX 
-        part1.innerText = sorted.join("");
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim().split("\n");
-        const L = {A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:10,K:11,L:12,M:13,N:14,O:15,P:16,Q:17,R:18,S:19,T:20,U:21,V:22,W:23,X:24,Y:25,Z:26};
-        
-        const all_steps = data2.map(step => {
-          let match = step.match(parse);
-          return [ match[1], match[2] ];
-        });
-        
-        let sorted = [];
-        let remaining_steps = all_steps.slice();
-        
-        //let sec = 0;
-        //let work = [];
-        //{ Second: 0, Worker1: "", Worker2: "", Done: "" }
-        let workers = [[],[]];
-        
-        //let safety = 100;
-        
-        // toggle back and forth between workers?
-        let toggle = 0;
-        while (remaining_steps.length > 0) {
-          console.log("remaining_steps", remaining_steps.length);
-          //if (safety-- < 0) break;
-          //while (workers[toggle].length < workers[(toggle + 1) % workers.length].length) {
-          //  workers[toggle].push(".");
-          //}
-          const allfound = [...new Set(remaining_steps.filter(a => remaining_steps.every(b => b[1] !== a[0])).map(s => s[0]).sort())];
-          
-          if (allfound.length > 0 && !(toggle === 1 && workers[0].length === workers[1].length)) {
-            console.log("allfound", allfound.length);
-            //if (safety-- < 0) break;
-
-            let found1 = allfound[0];
-            //  && (work[sec] === undefined || work[sec] === null || work[sec].w2 === "")
-            //let found2 = allfound.length > 1 ? allfound[1] : null;
-            
-            /*
-            let i = 0;
-            for (i = 0; i < L[found1]; i++) {
-              work[sec] = work[sec] || { w1: "", w2: "", d: "" };
-              work[sec].w1 = found1;
-              if (found2 !== null && i < L[found2] && work[sec].w2 === "") {
-                work[sec].w2 = found2;
-              }
-              work[sec].d = sorted.join("");
-              sec++;
-            }
-            
-            // continue with found 2 into the future, if it was bigger
-            if (found2 !== null && i < L[found2]) {
-              for (let i2 = 0; i2 < (L[found2] - i); i2++) {
-                work[sec + i2] = work[sec + i2] || { w1: "", w2: "", d: "" };
-                work[sec + i2].w2 = found2;
-              }
-            }
-            */
-            
-            // this is close, but not quite
-            //let max = found2 !== null ? Math.max(L[found1], L[found2]) : L[found1];
-            let max = L[found1];
-            console.log("max", max);
-            for (let i = 0; i < max; i++) {
-              //if (safety-- < 0) break;
-              
-              //if (i < L[found1]) {
-                // toggle
-                workers[toggle].push(found1);
-              //}
-              // && i < (max - 1)
-              if (allfound.length === 1 && workers[(toggle + 1) % workers.length].length < workers[toggle].length) {
-                workers[(toggle + 1) % workers.length].push(".");
-              }
-              //if (found2 === null) {
-              //  workers[1].push(".");
-              //} else if (i < L[found2]) {
-              //  workers[1].push(found2);
-              //}
-            }
-            
-            sorted.push(found1);
-
-            remaining_steps.forEach((s, idx) => {
-              console.log("found1", idx, found1, s[0], s[0] === found1);
-              if (s[0] === found1) {
-                
-                remaining_steps[idx] = [ s[1], null ];
-                console.log("shifted", idx, remaining_steps[idx]);
-              }
-            });
-            
-            //if (found2 !== null) {
-            //  sorted.push(found2);
-            //  remaining_steps.forEach((s, idx) => {
-            //    //console.log("found2", found2, s[0]);
-            //    if (s[0] === found2) {
-            //      remaining_steps[idx] = [ s[1], null ];
-            //    }
-            //  });
-            //}
-
-            // remove null steps
-            let nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
-            while (nullIndex > -1) {
-              console.log("nullIndex", nullIndex);
-              remaining_steps.splice(nullIndex, 1);
-              nullIndex = remaining_steps.findIndex(s => s[0] === null && s[1] === null);
-            }
-          }
-          toggle = (toggle + 1) % workers.length;
-        }
-        
-        console.log(workers);
-
-        // 233 is too low
-        part2.innerText = Math.max(workers[0].length, workers[1].length);
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 7);
     </script>
 
     <div class="glitchButton"></div>

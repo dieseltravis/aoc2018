@@ -32,7 +32,8 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/17/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button1" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
       <hr />
       <h2>
@@ -42,7 +43,8 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/17/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button2" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
     </main>
 
@@ -50,33 +52,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById("part1");
-      
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        const data1 = input1.value.trim();
-        
-        
-        
-        part1.innerText = "...";
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim();
-        
-
-        
-        part2.innerText = "...";
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 17);
     </script>
 
     <div class="glitchButton"></div>

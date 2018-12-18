@@ -30,7 +30,8 @@
         <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/10/input" target="_blank" class="get-input">get input</a>
         <code id="part1"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button1" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
       <hr />
       <h2>
@@ -40,7 +41,8 @@
         <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
         <a href="https://adventofcode.com/2018/day/10/input" target="_blank" class="get-input">get input</a>
         <code id="part2"></code>
-        <!-- <input type="submit" /> -->
+        <input id="button2" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
       </form>
     </main>
 
@@ -48,83 +50,10 @@
       Made with <a href="https://glitch.com">Glitch</a>!
     </footer>
     
-    <script>
-      const input1 = document.getElementById("input1");
-      const part1 = document.getElementById('part1');
-      const parse = /position=\<\s*(-?\d+),\s*(-?\d+)\>\s+velocity=\<\s*(-?\d+),\s*(-?\d+)\>/;
-      //                            1 x        2 y                       3 dx       4 dy
-      
-      input1.addEventListener("change", ev => {
-        console.time("part1");
-        const data1 = input1.value.trim().split("\n");
-        const points = data1.map(p => {
-          let parsed = p.match(parse).map(Number);
-          return {
-            // origin
-            ox: parsed[1],
-            oy: parsed[2],
-            // moving
-            dx: parsed[3],
-            dy: parsed[4],
-            // current
-            cx: parsed[1],
-            cy: parsed[2]
-          };
-        });
-        
-        let i = 0;
-
-        while (points.some(p => p.cx < 0 || p.cy < 0)) {
-          points.forEach(p => {
-            p.cx += p.dx;
-            p.cy += p.dy;
-          });
-          i++;
-        }
-        
-        console.log(i, points);
-        // 10054
-        
-        // lets try 50
-        for (let x = 0; x < 50; x++) {
-          let maxX = Math.max(...points.map(p => p.cx)) + 2;
-          let maxY = Math.max(...points.map(p => p.cy)) + 2;
-          //let tabula_rasa = Array(maxY + 1).fill(Array(maxX + 1).fill("."));
-          let plot = points.reduce((arr, p) => {
-            let x = p.cx + 1;
-            let y = p.cy + 1;
-            //console.log(p.cy, maxY);
-            if (y > 0 && x > 0) {
-              arr[y] = arr[y] || Array(maxX).fill(".");
-              arr[y][x] = "#";
-            }
-            
-            return arr;
-          }, []).filter(p => p && p.length > 0).map(p => p.join("")).join("\n");
-          console.log((i + x) + "\n" + plot);
-          
-          points.forEach(p => {
-            p.cx += p.dx;
-            p.cy += p.dy;
-          });
-        }
-        //console.log(points);
-        
-        part1.innerText = "look in the console";
-        console.timeEnd("part1");
-      });
-      
-      const input2 = document.getElementById("input2");
-      const part2 = document.getElementById('part2');
-      
-      input2.addEventListener("change", ev => {
-        console.time("part2");
-        const data2 = input2.value.trim().split("\n");
-        console.log("just paste it into part 1");
-        part2.innerText = "see part 1's console message";
-        console.timeEnd("part2");
-      });
-      
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 10);
     </script>
 
     <div class="glitchButton"></div>
