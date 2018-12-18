@@ -201,12 +201,11 @@ app.post("/day12part2", function (request, response) {
     return total;
   }, 0);
         
-  
   response.status(200).send({ output: lastIndex });
   console.timeEnd("part2");
 });
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
-  console.log('Your app is listening on port ' + listener.address().port);
+  console.log('Your cool app is listening on port ' + listener.address().port);
 });
