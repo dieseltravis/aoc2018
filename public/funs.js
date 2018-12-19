@@ -1,6 +1,26 @@
 (function () {
   "use strict";
   
+  // day 11
+  const getCellPower = function (x, y, serial) {
+    let rackId = x + 10;
+    let power = rackId * y;
+    power += serial;
+    power = power * rackId;
+
+    let str = power + "";
+    if (str.length >= 3) {
+      let char = str[str.length - 3];
+      power = Number(char);
+    } else {
+      power = 0;
+    }
+
+    power -= 5;
+
+    return power;
+  };
+  
   const all = {
     "day1":  {
       "part1": data => {
@@ -951,32 +971,621 @@
     },
     "day11": {
       "part1": data => {
+        const data1 = data.trim();
+        const serial = Number(data1);
+        let grid = [];
+        
+        for (let y = 1; y <= 300; y++) {
+          grid[y] = [];
+          for (let x = 1; x <= 300; x++) {
+            grid[y][x] = getCellPower(x, y, serial);
+          }
+        }
+        
+        let scores = {};
+      
+        for (let y = 1; y <= 300 - 3; y++) {
+          for (let x = 1; x <= 300 - 3; x++) {
+            scores[x+","+y] = 0;
+            for (let yy = 0; yy < 3; yy++) {
+              for (let xx = 0; xx < 3; xx++) {
+                scores[x+","+y] += grid[y+yy][x+xx];
+              }
+            }
+          }
+        }
+        
+        let maxx = Object.keys(scores).reduce((max, key) => {
+          if (scores[key] > max.val) {
+            max.coord = key;
+            max.val = scores[key];
+          }
+          return max;
+        }, { coord: "", val: 0 });
+        
+        console.log(maxx);
+        
+        return maxx.coord;
       },
       "part2": data => {
+        const input2 = data.trim();
+
+        const serial = Number(input2);
+        let grid = [];
+
+        for (let y = 1; y <= 300; y++) {
+          grid[y] = [];
+          for (let x = 1; x <= 300; x++) {
+            grid[y][x] = getCellPower(x, y, serial);
+          }
+        }
+
+        let max = { coord: "", val: 0 };
+        for (let s = 1; s <= 300; s++) {
+          for (let y = 1; y <= 300 - s; y++) {
+            for (let x = 1; x <= 300 - s; x++) {
+              let sum = 0;
+              for (let yy = 0; yy < s; yy++) {
+                for (let xx = 0; xx < s; xx++) {
+                  sum += grid[y+yy][x+xx];
+                }
+              }
+              if (sum > max.val) {
+                max.coord = x+","+y+","+s;
+                max.val = sum;
+              }
+            }
+          }
+
+          if (s % 3 ===0) {
+            console.log((s/3) + "%");
+          }
+        }
+
+        return max.coord;
       }
     },
     "day12": {
       "part1": data => {
+        const state = /initial state: ([\#\.]+)/;
+        const rule = /([\#\.]{5}) =\> ([\#\.])/;
+        const plants = /\#/g;
+        //const empties = /^(\.+)[\#\.]*\#(\.+)$/;
+        const emptyEnds = /^\.+|\.+$/g;
+
+        const emptyFirst = /^(\.+)/g;
+        const emptyLast = /\.+$/g;
+        
+        const data1 = data.trim().split("\n");
+        
+        const gens = 20;
+        
+        let current = data1[0].match(state)[1];
+        //console.log(data1.slice(2));
+        let rules = data1.slice(2).map(r => {
+          let parsed = r.match(rule);
+          return {
+            pattern: parsed[1],
+            replacement: parsed[2],
+          };
+        });
+        
+        let pots = current.match(plants).length;
+        console.log(0, current, pots);
+        
+        let indexOfPots = 0;
+        let left = 0;
+        
+        for (let i = 0; i < gens; i++) {
+          // pad with enough empties to match patterns
+          //let ends = current.match(empties);
+          //let start = (ends && ends.length > 1) ? ends[1].length : 0;
+          //let end = (ends && ends.length > 2) ? ends[2].length : 0;
+          //if (start < 5) {
+          //  current = ".".repeat(5 - start) + current;
+          //}
+          //if (start < 5) {
+          //  current += ".".repeat(5 - end);
+          //}
+          current = "...." + current /*.replace(emptyEnds, '')*/ + "....";
+          left -= 4;
+          
+          let next = ".".repeat(current.length).split("");
+          
+          rules.forEach(r => {
+            for (let c = current.indexOf("#")-2, l = current.lastIndexOf("#")+2; c <= l; c++) {
+              //let lpad = c === 0 ? ".." : c === 1 ? "." : "";
+              //let rpad = c === l - 1 ? ".." : c === l - 2 ? "." : "";
+              //let start = c === 0 || c === 1 ? 0 : c - 2;
+              //let end = c === l - 1 ||c === l - 2 ? l - 1 : c + 2;
+              let sub = current.substring(c - 2, c + 3);
+              //console.log(c, sub, r.pattern, sub === r.pattern)
+              if (sub === r.pattern) {
+                next[c] = r.replacement;
+                //console.log(c, next);
+              //} else {
+                //next[c] = current[c];
+              }
+            }
+          });
+          
+          // sum of indexes
+          next.forEach((n, i) => {
+            if (n === "#") {
+              indexOfPots += (i + left);
+            }
+          });
+          
+          next = next.join("");
+          
+          //plant count
+          let m = next.match(plants);
+          let potcount = m !== null ? m.length : 0;
+          pots += potcount;
+          
+          current = next;
+
+          console.log(i+1, current, potcount, pots, left, indexOfPots);
+        }
+        
+        let lastIndex = current.split("").reduce((total, n, i) => {
+            if (n === "#") {
+              total += (i + left);
+            }
+          return total;
+        }, 0);
+        
+        // not 928, too low
+        return lastIndex;
       },
       "part2": data => {
+        const state = /initial state: ([\#\.]+)/;
+        const rule = /([\#\.]{5}) =\> ([\#\.])/;
+        const plants = /\#/g;
+        //const empties = /^(\.+)[\#\.]*\#(\.+)$/;
+        const emptyEnds = /^\.+|\.+$/g;
+
+        const emptyFirst = /^(\.+)/g;
+        const emptyLast = /\.+$/g;
+        
+        const input2 = data;
+        const data2 = input2.trim().split("\n");
+
+        // figure out how many generations it takes to repeat starting pattern?
+        const gens = 50000000000;
+        // then mod by repeat amount
+
+        const initial = data2[0].match(state)[1].split("").map(c => c === '#' ? 1 : 0);
+        const initialLength = initial.length;
+        const initialNum = parseInt(initial.join(""), 2);
+        //console.log(initial, initialLength, initialNum);
+        let current = initial.slice();
+
+        // switch from strings to binary
+        let rules = data2.slice(2).map(r => {
+          let parsed = r.match(rule);
+          return [ 
+            parsed[1].split("").map(c => c === '#' ? 1 : 0),
+            parsed[2] === '#' ? 1 : 0
+          ];
+        });
+        //console.log(rules);
+
+        let left = 0;
+
+        console.log("starting the big loop...");
+        for (let i = 0; i < gens; i++) {
+          // adjust dots & left starting index
+          let predots = 0;
+          while (current.indexOf(0) === 0) {
+            current.shift();
+            predots++;
+          }
+          left += predots;
+          left -= 4;
+          current = [0, 0, 0, 0].concat(current);
+
+          while (current[current.length - 1] === 0) {
+            current.pop();
+          }
+          current = current.concat([0, 0, 0, 0]);
+
+          const cLength = current.length;
+          let next = new Array(cLength).fill(0);
+
+          rules.forEach(r => {
+            for (let c = 2; c < cLength - 3; c++) {
+              if (r[0].every((b, idx) => (b === current[idx + c - 2]))) {
+                next[c] = r[1];
+              }
+            }
+          });
+
+          current = next;
+
+          let isMatch = false;
+          for (let offset = 0, l = cLength - initialLength; offset < l; offset++) {
+            let bits = 0;
+            for (let b = initialLength; b--;) {
+              bits << current[offset + b];
+            }
+            if (bits === initialNum) {
+              isMatch = true;
+              break;
+            }
+          }
+          if (isMatch) {
+            console.log("repeating at " + i);
+            break;
+          }
+
+          if (i % (gens / 1000) === 0) {
+            console.log((i * 100 / gens) + "%");
+          }
+
+          //console.log(current.map(b => b ? '#' : '.').join(""));
+        }
+
+        let lastIndex = current.reduce((total, n, i) => {
+          if (n) {
+            total += (i + left);
+          }
+          return total;
+        }, 0);
+
+        return lastIndex;
       }
     },
     "day13": {
       "part1": data => {
+        const piece = {
+        // piece & heading directions
+          "\\": { N: "W", E: "S", S: "E", W: "N" }, 
+          "/":  { N: "E", E: "N", S: "W", W: "S" }, 
+          "-":  { N: "N", E: "E", S: "S", W: "W" }, 
+          "|":  { N: "N", E: "E", S: "S", W: "W" }, 
+          "+":  { N: "N", E: "E", S: "S", W: "W" } 
+        };
+        const turn = { 
+          "L": { N: "W", E: "N", S: "E", W: "S" }, 
+          "S": { N: "N", E: "E", S: "S", W: "W" }, 
+          "R": { N: "E", E: "S", S: "W", W: "N" }
+        };
+        const dir = { 
+          N: { t: "^", dx: 0, dy:-1 }, 
+          E: { t: ">", dx: 1, dy:0 }, 
+          S: { t: "v", dx: 0, dy:1 }, 
+          W: { t: "<", dx: -1, dy:0 }
+        };
+        
+        const data1 = data.split("\n");
+        
+        const track = data1.map(t => t.split(""));
+        
+        // find and load trains
+        let trains = [];
+        for (let y = 0, yl = track.length; y < yl; y++) {
+          for (let x = 0, xl = track[y].length; x < xl; x++) {
+            let p = track[y][x];
+            if (p === "^") {
+              trains.push({ x: x, y: y, dir: "N", turn: -1 });
+              track[y][x] = "|";
+            } else if (p === ">") {
+              trains.push({ x: x, y: y, dir: "E", turn: -1 });
+              track[y][x] = "-";
+            } else if (p === "v") {
+              trains.push({ x: x, y: y, dir: "S", turn: -1 });
+              track[y][x] = "|";
+            } else if (p === "<") {
+              trains.push({ x: x, y: y, dir: "W", turn: -1 });
+              track[y][x] = "-";
+            }
+          }
+        }
+        
+        //console.log(track.map(c => c.join("")).join("\n"));
+        
+        let isCrash = !trains.map(t => t.x+","+t.y).every((t,i,a) => {
+          //console.log(t, a.slice(0, i), a.slice(0, i).indexOf(t), a.slice(i+1), a.slice(i+1).indexOf(t));
+          return a.slice(0, i).indexOf(t) === -1 && a.slice(i+1).indexOf(t) === -1;
+        });
+        
+        let tick = 0;
+        //let lastPos = { x: 0, y: 0 }; 
+        let lastPos = "";
+        let safety = 1000;
+        while (!isCrash && safety--) {
+          tick++;
+          // move each
+          for (let i = 0, l = trains.length; i < l; i++) {
+          //trains.forEach(train => {
+            let train = trains[i];
+            //console.log(train);
+            let lookdir = dir[train.dir];
+            //console.log(lookdir);
+            let look = { 
+              x: train.x + lookdir.dx, 
+              y: train.y + lookdir.dy 
+            };
+            //console.log(look);
+            let found = track[look.y][look.x];
+            let newdir = train.dir;
+            if (found === "+") {
+              let tk = Object.keys(turn);
+              train.turn = (train.turn + 1) % tk.length;
+              newdir = turn[tk[train.turn]][train.dir];
+            } else {
+              newdir = piece[found][train.dir];
+            }
+            train.dir = newdir;
+            train.x = look.x;
+            train.y = look.y;
+            
+            isCrash = !trains.map(t => t.x+","+t.y).every((t,idx,a) => {
+              return a.slice(0, idx).indexOf(t) === -1 && a.slice(idx+1).indexOf(t) === -1;
+            });
+            if (isCrash) {
+              lastPos = train.x + "," + train.y;
+              break;
+            }
+          }//);
+            
+          //sort
+          trains.sort((a,b) => { 
+            let dy = a.y - b.y;
+            return dy !== 0 ? dy : a.x - b.x;
+          });
+        }
+        
+        console.log(trains, tick, isCrash, safety);
+        
+        //let lastPos = trains.map(t => t.x+","+t.y).filter((t,i,a) => {
+        //  return a.slice(0, i).indexOf(t) > -1 || a.slice(i+1).indexOf(t) > -1;
+        //})[0];
+        
+        return lastPos;
       },
       "part2": data => {
+        const piece = {
+        // piece & heading directions
+          "\\": { N: "W", E: "S", S: "E", W: "N" }, 
+          "/":  { N: "E", E: "N", S: "W", W: "S" }, 
+          "-":  { N: "N", E: "E", S: "S", W: "W" }, 
+          "|":  { N: "N", E: "E", S: "S", W: "W" }, 
+          "+":  { N: "N", E: "E", S: "S", W: "W" } 
+        };
+        const turn = { 
+          "L": { N: "W", E: "N", S: "E", W: "S" }, 
+          "S": { N: "N", E: "E", S: "S", W: "W" }, 
+          "R": { N: "E", E: "S", S: "W", W: "N" }
+        };
+        const dir = { 
+          N: { t: "^", dx: 0, dy:-1 }, 
+          E: { t: ">", dx: 1, dy:0 }, 
+          S: { t: "v", dx: 0, dy:1 }, 
+          W: { t: "<", dx: -1, dy:0 }
+        };
+        
+        const data2 = data.split("\n");
+        
+        const track = data2.map(t => t.split(""));
+        
+        // find and load trains
+        let trains = [];
+        for (let y = 0, yl = track.length; y < yl; y++) {
+          for (let x = 0, xl = track[y].length; x < xl; x++) {
+            let p = track[y][x];
+            if (p === "^") {
+              trains.push({ x: x, y: y, dir: "N", turn: -1, isCrashed: false });
+              track[y][x] = "|";
+            } else if (p === ">") {
+              trains.push({ x: x, y: y, dir: "E", turn: -1, isCrashed: false });
+              track[y][x] = "-";
+            } else if (p === "v") {
+              trains.push({ x: x, y: y, dir: "S", turn: -1, isCrashed: false });
+              track[y][x] = "|";
+            } else if (p === "<") {
+              trains.push({ x: x, y: y, dir: "W", turn: -1, isCrashed: false });
+              track[y][x] = "-";
+            }
+          }
+        }
+        
+        //console.log(track.map(c => c.join("")).join("\n"));
+        
+        let tick = 0;
+        
+        let lastPos = "";
+        let safety = 100000;
+        let crashed = 0;
+        while ((trains.length - crashed) > 1 && safety--) {
+          tick++;
+          // move each
+          for (let i = 0, l = trains.length; i < l; i++) {
+            let train = trains[i];
+            if (!train.isCrashed) {
+              let lookdir = dir[train.dir];
+              if (lookdir) {
+                let look = { 
+                  x: train.x + lookdir.dx, 
+                  y: train.y + lookdir.dy 
+                };
+                if (look.y >= 0 && look.y < track.length) {
+                  if (look.x >= 0 && look.x < track[look.y].length) {
+                    let found = track[look.y][look.x];
+                    let newdir = train.dir;
+                    if (found && found === "+") {
+                      let tk = Object.keys(turn);
+                      train.turn = (train.turn + 1) % tk.length;
+                      newdir = turn[tk[train.turn]][train.dir];
+                    } else if (found && piece[found]) {
+                      newdir = piece[found][train.dir];
+                    } else {
+                      console.log("found error: ", i, train, look, found, track[train.y][train.x]);
+                      train.isCrashed = true;
+                      crashed++;
+                    }
+                    train.dir = newdir;
+                    train.prev = train.x + "," + train.y;
+                    train.x = look.x;
+                    train.y = look.y;
+                  } else {
+                    console.log("x error: ", i, train, lookdir, look, track[train.y][train.x]);
+                    train.isCrashed = true;
+                    crashed++;
+                  }
+                } else {
+                  console.log("y error: ", i, train, lookdir, look, track[train.y][train.x]);
+                  train.isCrashed = true;
+                  crashed++;
+                }
+              } else {
+                console.log("lookdir error: ", i, train, lookdir, dir, track[train.y][train.x]);
+                train.isCrashed = true;
+                crashed++;
+              }
+
+              let isCrash = !trains.filter(t => !t.isCrashed).map(t => t.x+","+t.y).every((t,idx,a) => {
+                return a.slice(0, idx).indexOf(t) === -1 && a.slice(idx+1).indexOf(t) === -1;
+              });
+              
+              if (isCrash) {
+                train.isCrashed = true;
+                crashed++;
+                trains.forEach(t => { 
+                  if (!t.isCrashed && t.x === train.x && t.y === train.y) {
+                    t.isCrashed = true;
+                    crashed++;
+                  }
+                });
+              }
+            }
+          }
+          
+          //sort
+          trains.sort((a,b) => { 
+            let dy = a.y - b.y;
+            return dy !== 0 ? dy : a.x - b.x;
+          });
+        }
+        
+        let train = trains.filter(t => !t.isCrashed)[0];
+        lastPos = train.x + "," + train.y;
+        
+        // check next (just in case)...
+        let lookdir = dir[train.dir];
+        let look = { 
+          x: train.x + lookdir.dx, 
+          y: train.y + lookdir.dy 
+        };
+        train.next = look.x + "," + look.y;
+
+        console.log(trains, tick, safety);
+
+        // not 21,84, 
+        // not 71,97, not 72,97, not 73,97
+        return lastPos;
       }
     },
     "day14": {
       "part1": data => {
+        const data1 = data.trim();
+        
+        let chars = Number(data1);
+        let digits = [3, 7];
+        
+        let elf1 = 0; // ()
+        let elf2 = 1; // []
+        
+        let val1 = digits[elf1];
+        let val2 = digits[elf2];
+        
+        while (digits.length <= 10 + chars) {
+          let moreDigits = val1 + val2;
+          
+          // too slow!
+          //digits = digits.concat((moreDigits + "").split("").map(Number));
+          if (moreDigits >= 10) {
+            digits.push(1);
+          }
+          digits.push(moreDigits % 10);
+
+          elf1 = (elf1 + val1 + 1) % digits.length;
+          elf2 = (elf2 + val2 + 1) % digits.length;
+
+          
+          val1 = digits[elf1];
+          val2 = digits[elf2];
+
+          //console.log("elf1:" + elf1 + ":" + val1, "; elf2:" + elf2 + ":" + val2);
+          //console.log(digits.join(" "));
+        }
+        
+        let answer = digits.slice(chars, 10 + chars).join("");
+        
+        return answer;
       },
       "part2": data => {
+        const data2 = data.trim().split("");
+        
+        const match = data2.map(Number);
+        const mLength = match.length;
+
+        let digits = [3, 7];
+        
+        let elf1 = 0; // ()
+        let elf2 = 1; // []
+        
+        let val1 = digits[elf1];
+        let val2 = digits[elf2];
+        
+        let safety = 100000000;
+        let answer = -1;
+        
+        while (safety--) {
+          let moreDigits = val1 + val2;
+          if (moreDigits >= 10) {
+            digits.push(1);
+          }
+          digits.push(moreDigits % 10);
+          let dLength = digits.length;
+
+          elf1 = (elf1 + val1 + 1) % dLength;
+          elf2 = (elf2 + val2 + 1) % dLength;
+          
+          val1 = digits[elf1];
+          val2 = digits[elf2];
+          
+          if (mLength <= dLength) {
+            let isMatched = match.reduce((found, digit, idx) => {
+              return found && (digit === digits[dLength - mLength + idx]);
+            }, true);
+            if (isMatched) {
+              answer = dLength - mLength;
+              break;
+            } else if (moreDigits >= 10) {
+              // look again, one digit further
+              isMatched = match.reduce((found, digit, idx) => {
+                return found && (digit === digits[dLength - mLength + idx - 1]);
+              }, true);
+              if (isMatched) {
+                answer = dLength - mLength - 1;
+                break;
+              }
+            }
+          }
+        }
+        console.log(safety);
+        
+        return answer;
       }
     },
     "day15": {
       "part1": data => {
+        return "day 15 is bullshit";
       },
       "part2": data => {
+        return "day 15 is bullshit";
       }
     },
     "day16": {
