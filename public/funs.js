@@ -2086,8 +2086,121 @@
       }
     },
     "day19": {
-      "part1": data => {},
-      "part2": data => {}
+      "part1": data => {
+        const input = data.trim().split('\n');
+        const start = Number(input[0].match(/\#ip (\d+)/)[1]);
+        const instructs = input.slice(1).map(ins => {
+          const parsed = ins.match(/(\w+) (\d+) (\d+) (\d+)/);
+          return {
+            cmd: parsed[1],
+            a: Number(parsed[2]),
+            b: Number(parsed[3]),
+            c: Number(parsed[4])
+          };
+        });
+        console.log(start, instructs);
+        const i = {
+          addr: (r,a,b,c) => r[c] = r[a] + r[b],
+          addi: (r,a,b,c) => r[c] = r[a] + b,
+          mulr: (r,a,b,c) => r[c] = r[a] * r[b],
+          muli: (r,a,b,c) => r[c] = r[a] * b,
+          banr: (r,a,b,c) => r[c] = r[a] & r[b],
+          bani: (r,a,b,c) => r[c] = r[a] & b,
+          borr: (r,a,b,c) => r[c] = r[a] | r[b],
+          bori: (r,a,b,c) => r[c] = r[a] | b,
+          setr: (r,a,b,c) => r[c] = r[a],
+          seti: (r,a,b,c) => r[c] = a,
+          gtir: (r,a,b,c) => r[c] = a > r[b] ? 1 : 0,
+          gtri: (r,a,b,c) => r[c] = r[a] > b ? 1 : 0,
+          gtrr: (r,a,b,c) => r[c] = r[a] > r[b] ? 1 : 0,
+          eqir: (r,a,b,c) => r[c] = a === r[b] ? 1 : 0,
+          eqri: (r,a,b,c) => r[c] = r[a] === b ? 1 : 0,
+          eqrr: (r,a,b,c) => r[c] = r[a] === r[b] ? 1 : 0
+        };
+        let rr = [0,0,0,0,0,0];
+        let p = start;
+        let pv = rr[p];
+        let safety = 10000000;
+        console.log(rr);
+        
+        while (rr[p] >= 0 && rr[p] < instructs.length && pv >= 0 && pv < instructs.length && safety-- > 0 && rr.every(isFinite)) {
+          //let rnew = r.slice();
+          //rnew[0] = p;
+          rr[p] = pv;
+
+          let x = instructs[rr[p]];
+          //console.log(p, pv, x, rr.join(","));
+          i[x.cmd](rr, x.a, x.b, x.c);
+
+          //if (rnew[0] !== r[0]) {
+          //  r = rnew;
+          //}
+
+          pv = rr[p];
+          pv++;
+        }
+        
+        console.log(safety, pv, rr[p], rr);
+        
+        // not 19, not 18, not 0, yes 1008!
+        return rr[0];
+      },
+      "part2": data => {
+        const input = data.trim().split('\n');
+        const start = Number(input[0].match(/\#ip (\d+)/)[1]);
+        const instructs = input.slice(1).map(ins => {
+          const parsed = ins.match(/(\w+) (\d+) (\d+) (\d+)/);
+          return {
+            cmd: parsed[1],
+            a: Number(parsed[2]),
+            b: Number(parsed[3]),
+            c: Number(parsed[4])
+          };
+        });
+        console.log(start, instructs);
+        const i = {
+          addr: (r,a,b,c) => r[c] = r[a] + r[b],
+          addi: (r,a,b,c) => r[c] = r[a] + b,
+          mulr: (r,a,b,c) => r[c] = r[a] * r[b],
+          muli: (r,a,b,c) => r[c] = r[a] * b,
+          banr: (r,a,b,c) => r[c] = r[a] & r[b],
+          bani: (r,a,b,c) => r[c] = r[a] & b,
+          borr: (r,a,b,c) => r[c] = r[a] | r[b],
+          bori: (r,a,b,c) => r[c] = r[a] | b,
+          setr: (r,a,b,c) => r[c] = r[a],
+          seti: (r,a,b,c) => r[c] = a,
+          gtir: (r,a,b,c) => r[c] = a > r[b] ? 1 : 0,
+          gtri: (r,a,b,c) => r[c] = r[a] > b ? 1 : 0,
+          gtrr: (r,a,b,c) => r[c] = r[a] > r[b] ? 1 : 0,
+          eqir: (r,a,b,c) => r[c] = a === r[b] ? 1 : 0,
+          eqri: (r,a,b,c) => r[c] = r[a] === b ? 1 : 0,
+          eqrr: (r,a,b,c) => r[c] = r[a] === r[b] ? 1 : 0
+        };
+        
+        let rr = [1,0,0,0,0,0];
+        let p = start;
+        let pv = rr[p];
+        //let safety = 200;
+        console.log(rr);
+        const IL = instructs.length;
+        
+        // && rr.every(isFinite)
+        //  && safety-- > 0
+        while (pv >= 0 && pv < IL) {
+          rr[p] = pv;
+
+          let x = instructs[rr[p]];
+          //console.log(x, rr.join(","));
+          i[x.cmd](rr, x.a, x.b, x.c);
+
+          pv = rr[p];
+          pv++;
+        }
+        //console.log(safety);
+        console.log(pv, rr[p], rr);
+        
+        return rr[0];
+      }
     },
     "day20": {
       "part1": data => {},

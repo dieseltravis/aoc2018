@@ -5,8 +5,6 @@ const timeout = require('connect-timeout'); //express v4
 // run the same functions on the front & back
 const f = require("./public/funs");
 
-app.use(timeout(1200000));
-
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -15,6 +13,7 @@ app.get('/', function(request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
+app.use(timeout(1200000));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
