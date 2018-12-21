@@ -2203,8 +2203,12 @@
       }
     },
     "day20": {
-      "part1": data => {},
-      "part2": data => {}
+      "part1": data => {
+        return "nah";
+      },
+      "part2": data => {
+        return "nah";
+      }
     },
     "day21": {
       "part1": data => {},

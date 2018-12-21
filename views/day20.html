@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>twenty</title>
+    <meta name="description" content="twenty">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/day19" title="previous" rel="prev">⬅</a> 
+        <a href="/" title="up">⬆</a> 
+        <a href="/day21" title="next" rel="next">➡</a>
+      </nav>
+      <h1>
+        twenty
+      </h1>
+      <p>
+        <a href="//adventofcode.com/2018/day/20">adventofcode.com/2018/day/20</a>
+      </p>
+    </header>
+
+    <main>
+      <h2>
+        part 1
+      </h2>
+      <form method="POST" action="/day20part1">
+        <textarea id="input1" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/20/input" target="_blank" class="get-input">get input</a>
+        <code id="part1"></code>
+        <input id="button1" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
+      </form>
+      <hr />
+      <h2>
+        part 2
+      </h2>
+      <form method="POST" action="/day20part2">
+        <textarea id="input2" name="input" placeholder="input" cols="40" rows="5"></textarea>
+        <a href="https://adventofcode.com/2018/day/20/input" target="_blank" class="get-input">get input</a>
+        <code id="part2"></code>
+        <input id="button2" type="button" value="run in client" />
+        <input type="submit" value="run on server" />
+      </form>
+    </main>
+
+    <footer>
+      Made with <a href="https://glitch.com">Glitch</a>!
+    </footer>
+    
+    <script src="/funs.js"></script>
+    <script defer type="module">
+      import day from "/client.js";
+      day(funs, 20);
+    </script>
+
+    <div class="glitchButton"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+
+  </body>
+</html>
