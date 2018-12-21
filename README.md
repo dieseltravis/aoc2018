@@ -25,7 +25,9 @@ solutions:
 16. [day sixteen](https://waiting-caribou.glitch.me/day16)
 17. [day seventeen](https://waiting-caribou.glitch.me/day17) (my day 17 is a mess)
 18. [day eighteen](https://waiting-caribou.glitch.me/day18) (part 2 hasn't finished running yet)
-19. [day nineteen](https://waiting-caribou.glitch.me/day19)
+19. [day nineteen](https://waiting-caribou.glitch.me/day19) (part 2 hasn't finished running yet)
+20. [day twenty](https://waiting-caribou.glitch.me/day20) TODO:
+
 
 Made by [Glitch](https://glitch.com/)
 -------------------------------------
